@@ -1,0 +1,49 @@
+---
+title: "preliminary"
+author: "Finley O'Connor"
+date: "2024-03-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+base_dir = "C:/Users/ronan/Desktop/STATS/Senior-Project"
+```
+
+```{r install-packages}
+
+install.packages("leaflet")
+install.packages("leafsync")
+install.packages("kableExtra")
+install.packages("visdat")
+install.packages("naniar")
+install.packages("ggridges")
+
+```
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(broom)
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(stringr) ## For character string manipulation
+library(kableExtra) ## Table  output (in slides)
+#install.packages("visdat")
+library(visdat)
+# install.packages("naniar")
+library(naniar)
+library(readxl) ##working with xcel sheets
+library(ggridges)
+```
+
+### READ IN DATA
+```{r read-in-vegetation-file, echo = FALSE}
+island_veg <- read_csv("../data/island_veg.csv")
+veg_attributes <- read_csv("../data/plotpointsattributes.csv") 
+gdi_attributes <- read_csv("../data/gdipointsattributes.csv")
+```
+
