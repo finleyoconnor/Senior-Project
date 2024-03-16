@@ -498,10 +498,10 @@ schoodic_bird_all &lt;- schoodic_bird %&gt;%
 <li></li>
 </ul>
 <pre class="r"><code>island_bird &lt;- rbind(gdi_bird_all, heron_bird_all, shabby_bird_all, schoodic_bird_all)</code></pre>
-<p>#check misaligned obs in smpl_attributes &amp; island_veg</p>
-<pre class="r"><code>#rCompare(smpl_attributes,island_veg, key = &#39;name&#39;~&#39;gps&#39;)</code></pre>
-<pre class="r"><code>getwd()</code></pre>
-<pre><code>## [1] &quot;C:/Users/ronan/Documents/GitHub/Senior-Project&quot;</code></pre>
+<pre class="r"><code>#update bird data to the coordinate system used in leaflet
+island_bird &lt;- st_transform(island_bird, &quot;+init=epsg:4326&quot;)</code></pre>
+<pre><code>## Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is
+## deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></pre>
 <p>#Tidy vegetation data</p>
 <pre class="r"><code>island_veg &lt;- island_veg %&gt;% 
   mutate(name = gps)

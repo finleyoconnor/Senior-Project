@@ -96,6 +96,10 @@ island_bird <- rbind(gdi_bird_all, heron_bird_all, shabby_bird_all, schoodic_bir
 ```
 
 
+```{r change_coordinate_system_for_bird}
+#update bird data to the coordinate system used in leaflet
+island_bird <- st_transform(island_bird, "+init=epsg:4326")
+```
 
 #Tidy vegetation data
 ```{r join veg & coordinates}
