@@ -4,4 +4,80 @@ author: "Finley O'Connor"
 date: "2024-03-02"
 output: html_document
 ---
+#Loading data
+```{r read-in-data, message = FALSE, warning=FALSE}
+island_veg_all <- read_csv("island_veg_all.csv")
+```
+
+
+#Tidying?
+This is counting how many species each PLOT has - this does not account for the `NA`s within the dataset, which will need to be addressed later. 
+```{r}
+island_veg_all_count <- island_veg_all %>%
+  group_by(gps) %>% 
+  count(spp) %>% 
+  count(n) %>%
+  mutate(spp_count = nn) %>% 
+  select(-nn)
+
+island_veg_all <- island_veg_all %>% 
+                  left_join(island_veg_all_count, island_veg, by = "gps")
+```
+
+This is separating the data file into separate data frames by island?
+```{r}
+# Heron
+heron_veg_all <- island_veg_all %>% 
+  filter(location == "heron")
+
+# Schoodic
+schoodic_veg_all <- island_veg_all %>% 
+  filter(location == "schoodic")
+
+# shabby
+shabby_veg_all <- island_veg_all %>% 
+  filter(location == "shabby")
+
+# gdi
+gdi_veg_all <- island_veg_all %>% 
+  filter(location == "gdi")
+```
+
+This is counting how many species each ISLAND has - this does not account for the `NA`s within the dataset, which will need to be addressed later.
+```{r}
+# # total_island_veg_all_count <- 
+#   
+# island_veg_all %>%
+#   group_by(location) %>% 
+#   count(spp) %>%
+#   mutate(species_count = n) 
+# 
+# # %>% 
+# #   mutate(n = 1) %>%
+# #   count(n) %>% 
+# #   mutate(island_count = nn)
+# 
+# # island_veg_all <- island_veg_all %>% 
+# #                   left_join(island_veg_all_count, island_veg, by = "location")
+```
+
+
+# Analysis - Heron
+
+```{r}
+heron_veg_all %>% 
+ggplot(mapping = aes(x = spp)) + 
+  geom_bar() + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  
+```
+
+```{r}
+contingency_table_heron <- table(heron_veg_all$location, heron_veg_all$spp)
+contingency_table_heron
+```
+
+```{r}
+chisq.test(contingency_table_heron)
+```
 
