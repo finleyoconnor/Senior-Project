@@ -96,16 +96,6 @@ island_bird <- rbind(gdi_bird_all, heron_bird_all, shabby_bird_all, schoodic_bir
 ```
 
 
-#check misaligned obs in smpl_attributes & island_veg
-```{r}
-#rCompare(smpl_attributes,island_veg, key = 'name'~'gps')
-```
-
-```{r}
-getwd()
-
-```
-
 
 #Tidy vegetation data
 ```{r join veg & coordinates}

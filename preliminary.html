@@ -395,6 +395,22 @@ library(ggridges)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 3699 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (1): name
+## dbl (4): OID_, CID, POINT_X, POINT_Y
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## Rows: 2163 Columns: 5
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## dbl (4): OID_, CID, POINT_X, POINT_Y
+## lgl (1): OID_1
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## Rows: 355 Columns: 5
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -403,17 +419,18 @@ library(ggridges)</code></pre>
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>#gdi_attributes &lt;- gdi_attributes %&gt;%
-  #mutate(name = paste0(&#39;gdi&#39;,gdi_attributes$OID_))</code></pre>
+<pre class="r"><code>gdi_attributes &lt;- gdi_attributes %&gt;%
+  mutate(name = paste0(&#39;gdi&#39;,gdi_attributes$OID_))</code></pre>
 <ul>
 <li></li>
 </ul>
-<pre class="r"><code>#veg_attributes &lt;- full_join(veg_attributes, gdi_attributes)</code></pre>
+<pre class="r"><code>veg_attributes &lt;- full_join(veg_attributes, gdi_attributes)</code></pre>
+<pre><code>## Joining, by = c(&quot;OID_&quot;, &quot;CID&quot;, &quot;name&quot;, &quot;POINT_X&quot;, &quot;POINT_Y&quot;)</code></pre>
 <ul>
 <li></li>
 </ul>
 <pre><code>## Reading layer `gdi_nests_Merge&#39; from data source 
-##   `C:\Users\ronan\Desktop\STATS\Senior-Project\data\gull data\gdi_nests\gdi_nests_Merge.shp&#39; 
+##   `C:\Users\ronan\Documents\GitHub\Senior-Project\data\gull data\gdi_nests\gdi_nests_Merge.shp&#39; 
 ##   using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 1410 features and 14 fields
 ## Geometry type: POINT
@@ -421,7 +438,7 @@ library(ggridges)</code></pre>
 ## Bounding box:  xmin: 559716 ymin: 4887879 xmax: 560489 ymax: 4889701
 ## Projected CRS: NAD_1983_CORS96_UTM_Zone_19N</code></pre>
 <pre><code>## Reading layer `herg_nests_heron&#39; from data source 
-##   `C:\Users\ronan\Desktop\STATS\Senior-Project\data\gull data\heron_nests\herg_nests_heron.shp&#39; 
+##   `C:\Users\ronan\Documents\GitHub\Senior-Project\data\gull data\heron_nests\herg_nests_heron.shp&#39; 
 ##   using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 483 features and 10 fields
 ## Geometry type: POINT
@@ -429,7 +446,7 @@ library(ggridges)</code></pre>
 ## Bounding box:  xmin: 542004.1 ymin: 4882947 xmax: 542361.6 ymax: 4883435
 ## Projected CRS: NAD_1983_CORS96_UTM_Zone_19N</code></pre>
 <pre><code>## Reading layer `all_nests&#39; from data source 
-##   `C:\Users\ronan\Desktop\STATS\Senior-Project\data\gull data\schoodic_nests\all_nests.shp&#39; 
+##   `C:\Users\ronan\Documents\GitHub\Senior-Project\data\gull data\schoodic_nests\all_nests.shp&#39; 
 ##   using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 660 features and 19 fields
 ## Geometry type: POINT
@@ -437,7 +454,7 @@ library(ggridges)</code></pre>
 ## Bounding box:  xmin: 576928.8 ymin: 4908504 xmax: 577297.2 ymax: 4909699
 ## Projected CRS: NAD_1983_CORS96_UTM_Zone_19N</code></pre>
 <pre><code>## Reading layer `gull_eider_nests&#39; from data source 
-##   `C:\Users\ronan\Desktop\STATS\Senior-Project\data\gull data\shabby_nests\gull_eider_nests.shp&#39; 
+##   `C:\Users\ronan\Documents\GitHub\Senior-Project\data\gull data\shabby_nests\gull_eider_nests.shp&#39; 
 ##   using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 340 features and 14 fields
 ## Geometry type: POINT
@@ -484,200 +501,276 @@ schoodic_bird_all &lt;- schoodic_bird %&gt;%
 <p>#check misaligned obs in smpl_attributes &amp; island_veg</p>
 <pre class="r"><code>#rCompare(smpl_attributes,island_veg, key = &#39;name&#39;~&#39;gps&#39;)</code></pre>
 <pre class="r"><code>getwd()</code></pre>
-<pre><code>## [1] &quot;C:/Users/ronan/Desktop/STATS/Senior-Project&quot;</code></pre>
-<!-- #Tidy vegetation data -->
-<!-- ```{r join veg & coordinates} -->
-<!-- island_veg_all <- island_veg %>% -->
-<!--                   left_join(smpl_attributes, join_by("gps" == "name")) -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r standardize-island-naming} -->
-<!-- island_veg_all <- island_veg_all %>% -->
-<!--   mutate(location = case_when( -->
-<!--     location == "Schoodic" ~ "schoodic", -->
-<!--     location == "GDI" ~ "gdi", -->
-<!--     TRUE ~ location -->
-<!--   )) -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r recode-veg-height-class-names} -->
-<!--  island_veg_all <- island_veg_all %>% -->
-<!-- mutate(height_class = case_when(TRUE ~ as.factor(height))) %>% #making height class a factor variable in order to use it in a bar chart -->
-<!--   mutate(height_class_range = case_when( -->
-<!--     height_class == "1" ~ "0-0.15", -->
-<!--     height_class == "2" ~ "0.15-0.30", -->
-<!--     height_class == "3" ~ "0.30-1", -->
-<!--     height_class == "4" ~ "1-1.5", -->
-<!--     height_class == "5" ~ "1.5+" -->
-<!--   )) -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r recode-veg-cover-names} -->
-<!-- island_veg_all <- island_veg_all %>% -->
-<!--   mutate(percent_cover_range = case_when( -->
-<!--     cover == "1" ~ "0-0.01", -->
-<!--     cover == "5" ~ "0.02-0.05", -->
-<!--     cover == "25" ~ "0.06-0.25", -->
-<!--     cover == "50" ~ "0.26-0.50", -->
-<!--     cover == "75" ~ "0.51-0.75", -->
-<!--     cover == "100" ~ "0.76-1.00" -->
-<!--   )) -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r standardize spp (veg)} -->
-<!-- island_veg_all <- island_veg_all %>%  -->
-<!--   mutate(spp = case_when( -->
-<!--     spp == "achillea millefolium" ~ "Achillea millefolium", -->
-<!--     spp == "agrostis scabra" ~ "Agrostis scabra", -->
-<!--     spp == "agrostis stolonifera" ~ "Agrostis stolonifera", -->
-<!--     spp == "arctium sp" ~ "Arctium sp.", -->
-<!--     spp == "calystegia sepium" ~ "Calystegia sepium", -->
-<!--     spp == "carex nigra" ~ "Carex nigra", -->
-<!--     spp == "cerastium arvense" ~ "Cerastium arvense", -->
-<!--     spp == "cerastium fontana" ~ "Cerastium fontanum", -->
-<!--     spp == "cerastium fontanum" ~ "Cerastium fontanum", -->
-<!--     spp == "cirsium arvense" ~ "Cirsium arvense", -->
-<!--     spp == "cirsium vulgare" ~ "Cirsium vulgare", -->
-<!--     spp == "cornus canadensis" ~ "Cornus canadensis", -->
-<!--     spp == "cuscuta gronovii" ~ "Cuscuta gronovii", -->
-<!--     spp == "doellingeria umbellata" ~ "Doellingeria umbellata", -->
-<!--     spp == "festuca rubra" ~ "Festuca rubra", -->
-<!--     spp == "fragaria virginiana" ~ "Fragaria virginiana", -->
-<!--     spp == "hieracium caespitosum" ~ "Hieracium caespitosum", -->
-<!--     spp == "impatiens capensis" ~ "Impatiens capensis", -->
-<!--     spp == "iris versicolor" ~ "Iris versicolor", -->
-<!--     spp == "lathyrus japonicus" ~ "Lathyrus japonicus", -->
-<!--     spp == "lathyrus palustris" ~ "Lathyrus palustris", -->
-<!--     spp == "luzula multiflora" ~ "Luzula multiflora", -->
-<!--     spp == "maianthemum canadense" ~ "Maianthemum canadense", -->
-<!--     spp == "matricaria discoidea" ~ "Matricaria discoidea", -->
-<!--     spp == "myrica gale" ~ "Myrica gale", -->
-<!--     spp == "osmundastrum cinnamomeum" ~ "Osmundastrum cinnamomeum", -->
-<!--     spp == "plantago major" ~ "Plantago major", -->
-<!--     spp == "poa pratensis" ~ "Poa pratensis", -->
-<!--     spp == "Poa spp (tufting)" ~ "Poa sp.", -->
-<!--     spp == "potentilla anserina" ~ "Potentilla anserina", -->
-<!--     spp == "potentilla norvegica" ~ "Potentilla norvegica", -->
-<!--     spp == "potentilla simplex" ~ "Potentilla simplex", -->
-<!--     spp == "ranunculus acris" ~ "Ranunculus acris", -->
-<!--     spp == "rubus hispidus" ~ "Rubus hispidus", -->
-<!--     spp == "rubus idaeus" ~ "Rubus idaeus", -->
-<!--     spp == "rumex acetosella" ~ "Rumex acetosella", -->
-<!--     spp == "rumex longifolius" ~ "Rumex longifolius", -->
-<!--     spp == "rumex sp." ~ "Rumex sp.", -->
-<!--     spp == "scutellaria galericulata" ~ "Scutellaria galericulata", -->
-<!--     spp == "solanum dulcamara" ~ "Solanum dulcamara", -->
-<!--     spp == "solidago rugosa" ~ "Solidago rugosa", -->
-<!--     spp == "solidago sempervirens" ~ "Solidago sempervirens", -->
-<!--     spp == "spiraea alba" ~ "Spiraea alba", -->
-<!--     spp == "stellaria media" ~ "Stellaria media", -->
-<!--     spp == "Strawberry" ~ "Fragaria virginiana", -->
-<!--     spp == "symphotrichum novae-angliae" ~ "Symphotrichum novae-angliae", -->
-<!--     spp == "taraxacum officinale" ~ "Taraxacum officinale", -->
-<!--     spp == "taraxacum officionale" ~ "Taraxacum officinale", -->
-<!--     spp == "trifolium repens" ~ "Trifolium repens", -->
-<!--     spp == "urtica dioica" ~ "Urtica dioica", -->
-<!--     spp == "vaccinium angustifolium" ~ "Vaccinium angustifolium", -->
-<!--     spp == "valeriana officionalis" ~ "Valeriana officinalis", -->
-<!--     spp == "Valeriana officionalis" ~ "Valeriana officinalis", -->
-<!--     spp == "valeriana officinalis" ~ "Valeriana officinalis", -->
-<!--     spp == "veronica arvensis" ~ "Veronica arvensis", -->
-<!--     TRUE ~ spp -->
-<!--   )) -->
-<!-- print(island_veg_all) -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r insert IDs (veg)} -->
-<!-- island_veg_all <- island_veg_all %>%  -->
-<!--   mutate(spp = case_when( -->
-<!--     spp == "Min lat" ~ "Moehringia lateriflora", -->
-<!--     spp == "Calamagrostis #8" ~ "Poa pratensis", -->
-<!--     spp == "grass #54" ~ "Poa pratensis", -->
-<!--     spp == "Poa pratensis (#16)" ~ "Poa pratensis", -->
-<!--     spp == "Poa pratensis #16)" ~ "Poa pratensis", -->
-<!--     spp == "Poa spp #19" ~ "Alopecurus pratensis", -->
-<!--     spp == "elymus #33" ~ "Elymus trachycaulus", -->
-<!--     spp == "grass #74" ~ "Agrostis stolonifera", -->
-<!--     spp == "Poa #3" ~ "Poa trivialis", -->
-<!--     spp == "#53" ~ "Capsella bursa-pastoris", -->
-<!--     spp == "Poaceae #84" ~ "Elymus repens", -->
-<!--     spp == "Sedge #82" ~ "Carex silicea", -->
-<!--     spp == "Dock sp #45" ~ "Rumex britannica", -->
-<!--     spp == "dock sp #51" ~ "Rumex crispa", -->
-<!--     spp == "Poaceae #22" ~ "Anthoxanthum odoratum", -->
-<!--     spp == "Vetch #99" ~ "Lathyrus palustris", -->
-<!--     TRUE ~ spp -->
-<!--   )) -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r create-veg-types} -->
-<!-- island_veg_all$type <- "NA" -->
-<!-- ``` -->
-<!-- - -->
-<!-- ```{r assign-veg-types} -->
-<!-- island_veg_all <- island_veg_all %>% -->
-<!--   # select(location:percent_cover_range) %>% -->
-<!--    mutate(type = case_when( -->
-<!--     spp == "Achillea millefolium" ~ "herb", -->
-<!--     spp == "Agrostis scabra" ~ "gram", -->
-<!--     spp == "Agrostis stolonifera" ~ "gram", -->
-<!--     spp == "Arctium sp." ~ "herb", -->
-<!--     spp == "Calystegia sepium" ~ "vine", -->
-<!--     spp == "Carex nigra" ~ "gram", -->
-<!--     spp == "Cerastium arvense" ~ "herb", -->
-<!--     spp == "Cerastium fontanum" ~ "herb", -->
-<!--     spp == "Cerastium fontanum" ~ "herb", -->
-<!--     spp == "Cirsium arvense" ~ "herb", -->
-<!--     spp == "Cirsium vulgare" ~ "herb", -->
-<!--     spp == "Cornus canadensis" ~ "herb", -->
-<!--     spp == "Cuscuta gronovii" ~ "vine", -->
-<!--     spp == "Doellingeria umbellata" ~ "herb", -->
-<!--     spp == "Festuca rubra" ~ "gram", -->
-<!--     spp == "Fragaria virginiana" ~ "herb", -->
-<!--     spp == "Hieracium caespitosum" ~ "herb", -->
-<!--     spp == "Impatiens capensis" ~ "herb", -->
-<!--     spp == "Iris versicolor" ~ "herb", -->
-<!--     spp == "Lathyrus japonicus" ~ "vine", -->
-<!--     spp == "Lathyrus palustris" ~ "vine", -->
-<!--     spp == "Luzula multiflora" ~ "gram", -->
-<!--     spp == "Maianthemum canadense" ~ "herb", -->
-<!--     spp == "Matricaria discoidea" ~ "herb", -->
-<!--     spp == "Myrica gale" ~ "shrub", -->
-<!--     spp == "Osmundastrum cinnamomeum" ~ "herb", -->
-<!--     spp == "Plantago major" ~ "herb", -->
-<!--     spp == "Poa pratensis" ~ "gram", -->
-<!--     spp == "Poa sp." ~ "gram", -->
-<!--     spp == "Potentilla anserina" ~ "herb", -->
-<!--     spp == "Potentilla norvegica" ~ "herb", -->
-<!--     spp == "Potentilla simplex" ~ "herb", -->
-<!--     spp == "Ranunculus acris" ~ "herb", -->
-<!--     spp == "Rubus hispidus" ~ "vine", -->
-<!--     spp == "Rubus idaeus" ~ "shrub", -->
-<!--     spp == "Rumex acetosella" ~ "herb", -->
-<!--     spp == "Rumex longifolius" ~ "herb", -->
-<!--     spp == "Rumex sp." ~ "herb", -->
-<!--     spp == "Rubus shrub spp. (#32)" ~ "shrub", -->
-<!--     spp == "Scutellaria galericulata" ~ "herb", -->
-<!--     spp == "Solanum dulcamara" ~ "vine", -->
-<!--     spp == "Solidago rugosa" ~ "herb", -->
-<!--     spp == "Solidago sempervirens" ~ "herb", -->
-<!--     spp == "Spiraea alba" ~ "shrub", -->
-<!--     spp == "Stellaria media" ~ "herb", -->
-<!--     spp == "Symphotrichum novae-angliae" ~ "herb", -->
-<!--     spp == "Taraxacum officinale" ~ "herb", -->
-<!--     spp == "Trifolium repens" ~ "herb", -->
-<!--     spp == "Urtica dioica" ~ "herb", -->
-<!--     spp == "Vaccinium angustifolium" ~ "shrub", -->
-<!--     spp == "Valeriana officinalis" ~ "herb", -->
-<!--     spp == "Veronica arvensis" ~ "herb", -->
-<!--     TRUE ~ type -->
-<!--   )) -->
-<!-- ``` -->
-<!-- ##visualize the dataset -->
-<!-- ```{r find-unique-species-veg} -->
-<!-- unique <- unique(island_veg_all$spp) -->
-<!-- sort(unique) -->
-<!-- ``` -->
+<pre><code>## [1] &quot;C:/Users/ronan/Documents/GitHub/Senior-Project&quot;</code></pre>
+<p>#Tidy vegetation data</p>
+<pre class="r"><code>island_veg &lt;- island_veg %&gt;% 
+  mutate(name = gps)
+
+island_veg_all &lt;- island_veg %&gt;% 
+                  left_join(veg_attributes, island_veg, by = &quot;name&quot;)</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code>island_veg_all &lt;- island_veg_all %&gt;%
+  mutate(location = case_when(
+    location == &quot;Schoodic&quot; ~ &quot;schoodic&quot;,
+    location == &quot;GDI&quot; ~ &quot;gdi&quot;,
+    TRUE ~ location
+  ))</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code> island_veg_all &lt;- island_veg_all %&gt;%
+mutate(height_class = case_when(TRUE ~ as.factor(height))) %&gt;% #making height class a factor variable in order to use it in a bar chart
+  mutate(height_class_range = case_when(
+    height_class == &quot;1&quot; ~ &quot;0-0.15&quot;,
+    height_class == &quot;2&quot; ~ &quot;0.15-0.30&quot;,
+    height_class == &quot;3&quot; ~ &quot;0.30-1&quot;,
+    height_class == &quot;4&quot; ~ &quot;1-1.5&quot;,
+    height_class == &quot;5&quot; ~ &quot;1.5+&quot;
+  ))</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code>island_veg_all &lt;- island_veg_all %&gt;%
+  mutate(percent_cover_range = case_when(
+    cover == &quot;1&quot; ~ &quot;0-0.01&quot;,
+    cover == &quot;5&quot; ~ &quot;0.02-0.05&quot;,
+    cover == &quot;25&quot; ~ &quot;0.06-0.25&quot;,
+    cover == &quot;50&quot; ~ &quot;0.26-0.50&quot;,
+    cover == &quot;75&quot; ~ &quot;0.51-0.75&quot;,
+    cover == &quot;100&quot; ~ &quot;0.76-1.00&quot;
+  ))</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code>island_veg_all &lt;- island_veg_all %&gt;%
+  mutate(spp = case_when(
+    spp == &quot;achillea millefolium&quot; ~ &quot;Achillea millefolium&quot;,
+    spp == &quot;agrostis scabra&quot; ~ &quot;Agrostis scabra&quot;,
+    spp == &quot;agrostis stolonifera&quot; ~ &quot;Agrostis stolonifera&quot;,
+    spp == &quot;arctium sp&quot; ~ &quot;Arctium sp.&quot;,
+    spp == &quot;calystegia sepium&quot; ~ &quot;Calystegia sepium&quot;,
+    spp == &quot;carex nigra&quot; ~ &quot;Carex nigra&quot;,
+    spp == &quot;cerastium arvense&quot; ~ &quot;Cerastium arvense&quot;,
+    spp == &quot;cerastium fontana&quot; ~ &quot;Cerastium fontanum&quot;,
+    spp == &quot;cerastium fontanum&quot; ~ &quot;Cerastium fontanum&quot;,
+    spp == &quot;cirsium arvense&quot; ~ &quot;Cirsium arvense&quot;,
+    spp == &quot;cirsium vulgare&quot; ~ &quot;Cirsium vulgare&quot;,
+    spp == &quot;cornus canadensis&quot; ~ &quot;Cornus canadensis&quot;,
+    spp == &quot;cuscuta gronovii&quot; ~ &quot;Cuscuta gronovii&quot;,
+    spp == &quot;doellingeria umbellata&quot; ~ &quot;Doellingeria umbellata&quot;,
+    spp == &quot;festuca rubra&quot; ~ &quot;Festuca rubra&quot;,
+    spp == &quot;fragaria virginiana&quot; ~ &quot;Fragaria virginiana&quot;,
+    spp == &quot;hieracium caespitosum&quot; ~ &quot;Hieracium caespitosum&quot;,
+    spp == &quot;impatiens capensis&quot; ~ &quot;Impatiens capensis&quot;,
+    spp == &quot;iris versicolor&quot; ~ &quot;Iris versicolor&quot;,
+    spp == &quot;lathyrus japonicus&quot; ~ &quot;Lathyrus japonicus&quot;,
+    spp == &quot;lathyrus palustris&quot; ~ &quot;Lathyrus palustris&quot;,
+    spp == &quot;luzula multiflora&quot; ~ &quot;Luzula multiflora&quot;,
+    spp == &quot;maianthemum canadense&quot; ~ &quot;Maianthemum canadense&quot;,
+    spp == &quot;matricaria discoidea&quot; ~ &quot;Matricaria discoidea&quot;,
+    spp == &quot;myrica gale&quot; ~ &quot;Myrica gale&quot;,
+    spp == &quot;osmundastrum cinnamomeum&quot; ~ &quot;Osmundastrum cinnamomeum&quot;,
+    spp == &quot;plantago major&quot; ~ &quot;Plantago major&quot;,
+    spp == &quot;poa pratensis&quot; ~ &quot;Poa pratensis&quot;,
+    spp == &quot;Poa spp (tufting)&quot; ~ &quot;Poa sp.&quot;,
+    spp == &quot;potentilla anserina&quot; ~ &quot;Potentilla anserina&quot;,
+    spp == &quot;potentilla norvegica&quot; ~ &quot;Potentilla norvegica&quot;,
+    spp == &quot;potentilla simplex&quot; ~ &quot;Potentilla simplex&quot;,
+    spp == &quot;ranunculus acris&quot; ~ &quot;Ranunculus acris&quot;,
+    spp == &quot;rubus hispidus&quot; ~ &quot;Rubus hispidus&quot;,
+    spp == &quot;rubus idaeus&quot; ~ &quot;Rubus idaeus&quot;,
+    spp == &quot;rumex acetosella&quot; ~ &quot;Rumex acetosella&quot;,
+    spp == &quot;rumex longifolius&quot; ~ &quot;Rumex longifolius&quot;,
+    spp == &quot;rumex sp.&quot; ~ &quot;Rumex sp.&quot;,
+    spp == &quot;scutellaria galericulata&quot; ~ &quot;Scutellaria galericulata&quot;,
+    spp == &quot;solanum dulcamara&quot; ~ &quot;Solanum dulcamara&quot;,
+    spp == &quot;solidago rugosa&quot; ~ &quot;Solidago rugosa&quot;,
+    spp == &quot;solidago sempervirens&quot; ~ &quot;Solidago sempervirens&quot;,
+    spp == &quot;spiraea alba&quot; ~ &quot;Spiraea alba&quot;,
+    spp == &quot;stellaria media&quot; ~ &quot;Stellaria media&quot;,
+    spp == &quot;Strawberry&quot; ~ &quot;Fragaria virginiana&quot;,
+    spp == &quot;symphotrichum novae-angliae&quot; ~ &quot;Symphotrichum novae-angliae&quot;,
+    spp == &quot;taraxacum officinale&quot; ~ &quot;Taraxacum officinale&quot;,
+    spp == &quot;taraxacum officionale&quot; ~ &quot;Taraxacum officinale&quot;,
+    spp == &quot;trifolium repens&quot; ~ &quot;Trifolium repens&quot;,
+    spp == &quot;urtica dioica&quot; ~ &quot;Urtica dioica&quot;,
+    spp == &quot;vaccinium angustifolium&quot; ~ &quot;Vaccinium angustifolium&quot;,
+    spp == &quot;valeriana officionalis&quot; ~ &quot;Valeriana officinalis&quot;,
+    spp == &quot;Valeriana officionalis&quot; ~ &quot;Valeriana officinalis&quot;,
+    spp == &quot;valeriana officinalis&quot; ~ &quot;Valeriana officinalis&quot;,
+    spp == &quot;veronica arvensis&quot; ~ &quot;Veronica arvensis&quot;,
+    TRUE ~ spp
+  ))
+print(island_veg_all)</code></pre>
+<pre><code>## # A tibble: 339 × 19
+##    location `collected by` date   gps   cover height common spp_code spp   notes
+##    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;
+##  1 heron    finn           5/27/… hrn3…     1      1 &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  tran…
+##  2 heron    finn           5/27/… hrn2…     1      1 &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;  1) H…
+##  3 heron    finn           5/27/… hrn3…   100      2 valer… val off  Vale… &lt;NA&gt; 
+##  4 heron    finn           5/27/… hrn3…   100      2 dande… tar off  Tara… (dra…
+##  5 heron    finn           5/27/… hrn3…   100      2 sting… urt dio  Urti… &lt;NA&gt; 
+##  6 heron    finn           5/27/… hrn3…   100      2 straw… fra vir  Frag… &lt;NA&gt; 
+##  7 heron    finn           5/27/… hrn3…   100      2 unkno… unk      Cary… &lt;NA&gt; 
+##  8 heron    finn           5/27/… hrn3…   100      2 corn … ver arv  Vero… &lt;NA&gt; 
+##  9 heron    finn           5/27/… hrn3…   100      2 unkno… unk      Soli… &lt;NA&gt; 
+## 10 heron    finn           5/27/… hrn3…   100      2 bitte… sol dul  Sola… &lt;NA&gt; 
+## # … with 329 more rows, and 9 more variables: name &lt;chr&gt;, OID_ &lt;dbl&gt;,
+## #   CID &lt;dbl&gt;, POINT_X &lt;dbl&gt;, POINT_Y &lt;dbl&gt;, OID_1 &lt;lgl&gt;, height_class &lt;fct&gt;,
+## #   height_class_range &lt;chr&gt;, percent_cover_range &lt;chr&gt;</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code>island_veg_all &lt;- island_veg_all %&gt;%
+  mutate(spp = case_when(
+    spp == &quot;Min lat&quot; ~ &quot;Moehringia lateriflora&quot;,
+    spp == &quot;Calamagrostis #8&quot; ~ &quot;Poa pratensis&quot;,
+    spp == &quot;grass #54&quot; ~ &quot;Poa pratensis&quot;,
+    spp == &quot;Poa pratensis (#16)&quot; ~ &quot;Poa pratensis&quot;,
+    spp == &quot;Poa pratensis #16)&quot; ~ &quot;Poa pratensis&quot;,
+    spp == &quot;Poa spp #19&quot; ~ &quot;Alopecurus pratensis&quot;,
+    spp == &quot;elymus #33&quot; ~ &quot;Elymus trachycaulus&quot;,
+    spp == &quot;grass #74&quot; ~ &quot;Agrostis stolonifera&quot;,
+    spp == &quot;Poa #3&quot; ~ &quot;Poa trivialis&quot;,
+    spp == &quot;#53&quot; ~ &quot;Capsella bursa-pastoris&quot;,
+    spp == &quot;Poaceae #84&quot; ~ &quot;Elymus repens&quot;,
+    spp == &quot;Sedge #82&quot; ~ &quot;Carex silicea&quot;,
+    spp == &quot;Dock sp #45&quot; ~ &quot;Rumex britannica&quot;,
+    spp == &quot;dock sp #51&quot; ~ &quot;Rumex crispa&quot;,
+    spp == &quot;Poaceae #22&quot; ~ &quot;Anthoxanthum odoratum&quot;,
+    spp == &quot;Vetch #99&quot; ~ &quot;Lathyrus palustris&quot;,
+    spp == &quot;#36&quot; ~ &quot;Epilobium ciliatum&quot;,
+    spp == &quot;lamiaceae #70&quot; ~ &quot;Galeopsis bifida&quot;,
+    spp == &quot;lamiaceae #90&quot; ~ &quot;Lycopus uniflorus&quot;,
+    spp == &quot;#13&quot; ~ &quot;Capsella bursa-pastoris&quot;, 
+    spp == &quot;#5&quot; ~ &quot;Solidago puberula&quot;, 
+    spp == &quot;#7&quot; ~ &quot;Ribes glandulosum&quot;,
+    spp == &quot;Atriplex #35&quot; ~ &quot;Atriplex subspicata&quot;, 
+    spp == &quot;Caryophalles (#77)&quot; ~ &quot;Cerastium arvense&quot;,
+    spp == &quot;Cleavers (#37)&quot; ~ &quot;Galium sylvaticum&quot;, 
+    spp == &quot;Lamiales (#39)&quot; ~ &quot;Scutellaria galericulata&quot;, 
+    spp == &quot;Poa spp #73&quot; ~ &quot;Poa pratensis&quot;, 
+    spp == &quot;potentilla/geum #83&quot; ~ &quot;Potentilla norvegica&quot;, 
+    spp == &quot;Rosaceae #95&quot; ~ &quot;Fragaria virginiana&quot;, 
+    spp == &quot;Rubus shrub spp. (#32)&quot; ~ &quot;Rubus idaeus&quot;, 
+    spp == &quot;Solidago #2&quot; ~ &quot;Solidago sempervirens&quot;, 
+    spp == &quot;Solidago #64&quot; ~ &quot;Solidago puberula&quot;, 
+    spp == &quot;Solidago (#100)&quot; ~ &quot;Solidago sempervirens&quot;, 
+    spp == &quot;Solidago (#64)&quot; ~ &quot;Solidago puberula&quot;, 
+    spp == &quot;Thistle (#75)&quot; ~ &quot;Cirsium vulgare&quot;, 
+    spp == &quot;Veronica #1&quot; ~ &quot;Veronica arvensis&quot;,
+    spp == &quot;yell. Brassicaceae #58&quot; ~ &quot;Raphanus raphanistrum&quot;, 
+    spp == &quot;Lamiaceae #30&quot; ~ &quot;Angelica lucida&quot;,
+    TRUE ~ spp
+  ))</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code>island_veg_all$type &lt;- &quot;NA&quot;</code></pre>
+<ul>
+<li></li>
+</ul>
+<pre class="r"><code>island_veg_all &lt;- island_veg_all %&gt;%
+  # select(location:percent_cover_range) %&gt;%
+   mutate(type = case_when(
+    spp == &quot;Achillea millefolium&quot; ~ &quot;herb&quot;,
+    spp == &quot;Agrostis scabra&quot; ~ &quot;gram&quot;,
+    spp == &quot;Agrostis stolonifera&quot; ~ &quot;gram&quot;,
+    spp == &quot;Arctium sp.&quot; ~ &quot;herb&quot;,
+    spp == &quot;Calystegia sepium&quot; ~ &quot;vine&quot;,
+    spp == &quot;Carex nigra&quot; ~ &quot;gram&quot;,
+    spp == &quot;Cerastium arvense&quot; ~ &quot;herb&quot;,
+    spp == &quot;Cerastium fontanum&quot; ~ &quot;herb&quot;,
+    spp == &quot;Cerastium fontanum&quot; ~ &quot;herb&quot;,
+    spp == &quot;Cirsium arvense&quot; ~ &quot;herb&quot;,
+    spp == &quot;Cirsium vulgare&quot; ~ &quot;herb&quot;,
+    spp == &quot;Cornus canadensis&quot; ~ &quot;herb&quot;,
+    spp == &quot;Cuscuta gronovii&quot; ~ &quot;vine&quot;,
+    spp == &quot;Doellingeria umbellata&quot; ~ &quot;herb&quot;,
+    spp == &quot;Festuca rubra&quot; ~ &quot;gram&quot;,
+    spp == &quot;Fragaria virginiana&quot; ~ &quot;herb&quot;,
+    spp == &quot;Hieracium caespitosum&quot; ~ &quot;herb&quot;,
+    spp == &quot;Impatiens capensis&quot; ~ &quot;herb&quot;,
+    spp == &quot;Iris versicolor&quot; ~ &quot;herb&quot;,
+    spp == &quot;Lathyrus japonicus&quot; ~ &quot;vine&quot;,
+    spp == &quot;Lathyrus palustris&quot; ~ &quot;vine&quot;,
+    spp == &quot;Luzula multiflora&quot; ~ &quot;gram&quot;,
+    spp == &quot;Maianthemum canadense&quot; ~ &quot;herb&quot;,
+    spp == &quot;Matricaria discoidea&quot; ~ &quot;herb&quot;,
+    spp == &quot;Myrica gale&quot; ~ &quot;shrub&quot;,
+    spp == &quot;Osmundastrum cinnamomeum&quot; ~ &quot;herb&quot;,
+    spp == &quot;Plantago major&quot; ~ &quot;herb&quot;,
+    spp == &quot;Poa pratensis&quot; ~ &quot;gram&quot;,
+    spp == &quot;Poa sp.&quot; ~ &quot;gram&quot;,
+    spp == &quot;Potentilla anserina&quot; ~ &quot;herb&quot;,
+    spp == &quot;Potentilla norvegica&quot; ~ &quot;herb&quot;,
+    spp == &quot;Potentilla simplex&quot; ~ &quot;herb&quot;,
+    spp == &quot;Ranunculus acris&quot; ~ &quot;herb&quot;,
+    spp == &quot;Rubus hispidus&quot; ~ &quot;vine&quot;,
+    spp == &quot;Rubus idaeus&quot; ~ &quot;shrub&quot;,
+    spp == &quot;Rumex acetosella&quot; ~ &quot;herb&quot;,
+    spp == &quot;Rumex longifolius&quot; ~ &quot;herb&quot;,
+    spp == &quot;Rumex sp.&quot; ~ &quot;herb&quot;,
+    spp == &quot;Rubus shrub spp. (#32)&quot; ~ &quot;shrub&quot;,
+    spp == &quot;Scutellaria galericulata&quot; ~ &quot;herb&quot;,
+    spp == &quot;Solanum dulcamara&quot; ~ &quot;vine&quot;,
+    spp == &quot;Solidago rugosa&quot; ~ &quot;herb&quot;,
+    spp == &quot;Solidago sempervirens&quot; ~ &quot;herb&quot;,
+    spp == &quot;Spiraea alba&quot; ~ &quot;shrub&quot;,
+    spp == &quot;Stellaria media&quot; ~ &quot;herb&quot;,
+    spp == &quot;Symphotrichum novae-angliae&quot; ~ &quot;herb&quot;,
+    spp == &quot;Taraxacum officinale&quot; ~ &quot;herb&quot;,
+    spp == &quot;Trifolium repens&quot; ~ &quot;herb&quot;,
+    spp == &quot;Urtica dioica&quot; ~ &quot;herb&quot;,
+    spp == &quot;Vaccinium angustifolium&quot; ~ &quot;shrub&quot;,
+    spp == &quot;Valeriana officinalis&quot; ~ &quot;herb&quot;,
+    spp == &quot;Veronica arvensis&quot; ~ &quot;herb&quot;,
+    spp == &quot;Epilobium ciliatum&quot; ~ &quot;herb&quot;,
+    TRUE ~ type
+  ))</code></pre>
+<p>##visualize the dataset</p>
+<pre class="r"><code>unique &lt;- unique(island_veg_all$spp)
+sort(unique)</code></pre>
+<pre><code>##  [1] &quot;Achillea millefolium&quot;         &quot;Agrostis scabra&quot;             
+##  [3] &quot;Agrostis stolonifera&quot;         &quot;Alopecurus pratensis&quot;        
+##  [5] &quot;Angelica lucida&quot;              &quot;Anthoxanthum odoratum&quot;       
+##  [7] &quot;Arctium sp.&quot;                  &quot;Atriplex subspicata&quot;         
+##  [9] &quot;Calystegia sepium&quot;            &quot;Capsella bursa-pastoris&quot;     
+## [11] &quot;Carex nigra&quot;                  &quot;Carex silicea&quot;               
+## [13] &quot;Cerastium arvense&quot;            &quot;Cerastium fontanum&quot;          
+## [15] &quot;Cirsium arvense&quot;              &quot;Cirsium vulgare&quot;             
+## [17] &quot;Cornus canadensis&quot;            &quot;Cuscuta gronovii&quot;            
+## [19] &quot;Doellingeria umbellata&quot;       &quot;Elymus repens&quot;               
+## [21] &quot;Elymus trachycaulus&quot;          &quot;Epilobium ciliatum&quot;          
+## [23] &quot;Festuca rubra&quot;                &quot;Fragaria virginiana&quot;         
+## [25] &quot;Galeopsis bifida&quot;             &quot;Galium sylvaticum&quot;           
+## [27] &quot;Hieracium caespitosum&quot;        &quot;Impatiens capensis&quot;          
+## [29] &quot;Iris versicolor&quot;              &quot;Lathyrus japonicus&quot;          
+## [31] &quot;Lathyrus palustris&quot;           &quot;Luzula multiflora&quot;           
+## [33] &quot;Lycopus uniflorus&quot;            &quot;Maianthemum canadense&quot;       
+## [35] &quot;Matricaria discoidea&quot;         &quot;Mentha canadensis&quot;           
+## [37] &quot;Moehringia lateriflora&quot;       &quot;Myrica gale&quot;                 
+## [39] &quot;Osmundastrum cinnamomeum&quot;     &quot;Plantago major&quot;              
+## [41] &quot;plantago maritima&quot;            &quot;Poa pratensis&quot;               
+## [43] &quot;Poa pratensis (#6)&quot;           &quot;Poa sp.&quot;                     
+## [45] &quot;Poa trivialis&quot;                &quot;Potentilla anserina&quot;         
+## [47] &quot;Potentilla norvegica&quot;         &quot;Potentilla simplex&quot;          
+## [49] &quot;Ranunculus acris&quot;             &quot;Raphanus raphanistrum&quot;       
+## [51] &quot;Ribes glandulosum&quot;            &quot;Rubus hispidus&quot;              
+## [53] &quot;Rubus idaeus&quot;                 &quot;Rumex acetosella&quot;            
+## [55] &quot;Rumex britannica&quot;             &quot;Rumex crispa&quot;                
+## [57] &quot;Rumex longifolius&quot;            &quot;Rumex pallidus&quot;              
+## [59] &quot;Rumex sp.&quot;                    &quot;Scutellaria galericulata&quot;    
+## [61] &quot;Solanum dulcamara&quot;            &quot;Solidago puberula&quot;           
+## [63] &quot;Solidago rugosa&quot;              &quot;Solidago sempervirens&quot;       
+## [65] &quot;Spiraea alba&quot;                 &quot;Stellaria media&quot;             
+## [67] &quot;symphyotrichum novae-angliae&quot; &quot;Taraxacum officinale&quot;        
+## [69] &quot;Thistle sp&quot;                   &quot;Trifolium repens&quot;            
+## [71] &quot;Urtica dioica&quot;                &quot;Vaccinium angustifolium&quot;     
+## [73] &quot;Valeriana officinalis&quot;        &quot;Veronica arvensis&quot;           
+## [75] &quot;young yarrow? #56&quot;</code></pre>
 </div>
 
 
