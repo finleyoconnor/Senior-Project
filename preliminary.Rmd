@@ -327,6 +327,7 @@ unique <- unique(island_veg_all$spp)
 sort(unique)
 ```
 
+
 ```{r writing-CSVs}
 write_csv(island_veg_all, "island_veg_all.csv")
 
