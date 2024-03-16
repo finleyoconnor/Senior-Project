@@ -234,7 +234,25 @@ island_veg_all <- island_veg_all %>%
     spp == "#36" ~ "Epilobium ciliatum",
     spp == "lamiaceae #70" ~ "Galeopsis bifida",
     spp == "lamiaceae #90" ~ "Lycopus uniflorus",
-    spp == 
+    spp == "#13" ~ "Capsella bursa-pastoris", 
+    spp == "#5" ~ "Solidago puberula", 
+    spp == "#7" ~ "Ribes glandulosum",
+    spp == "Atriplex #35" ~ "Atriplex subspicata", 
+    spp == "Caryophalles (#77)" ~ "Cerastium arvense",
+    spp == "Cleavers (#37)" ~ "Galium sylvaticum", 
+    spp == "Lamiales (#39)" ~ "Scutellaria galericulata", 
+    spp == "Poa spp #73" ~ "Poa pratensis", 
+    spp == "potentilla/geum #83" ~ "Potentilla norvegica", 
+    spp == "Rosaceae #95" ~ "Fragaria virginiana", 
+    spp == "Rubus shrub spp. (#32)" ~ "Rubus idaeus", 
+    spp == "Solidago #2" ~ "Solidago sempervirens", 
+    spp == "Solidago #64" ~ "Solidago puberula", 
+    spp == "Solidago (#100)" ~ "Solidago sempervirens", 
+    spp == "Solidago (#64)" ~ "Solidago puberula", 
+    spp == "Thistle (#75)" ~ "Cirsium vulgare", 
+    spp == "Veronica #1" ~ "Veronica arvensis",
+    spp == "yell. Brassicaceae #58" ~ "Raphanus raphanistrum", 
+    spp == "Lamiaceae #30" ~ "Angelica lucida",
     TRUE ~ spp
   ))
 ```
