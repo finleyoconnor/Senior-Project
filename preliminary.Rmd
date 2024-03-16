@@ -29,6 +29,7 @@ library(naniar)
 library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
+library(stringr)
 ```
 
 ### READ IN DATA
@@ -100,6 +101,11 @@ island_bird <- rbind(gdi_bird_all, heron_bird_all, shabby_bird_all, schoodic_bir
 #update bird data to the coordinate system used in leaflet
 island_bird <- st_transform(island_bird, "+init=epsg:4326")
 ```
+
+```{r mutate_column_for_long_and_lat}
+island_bird$geometry
+```
+
 
 #Tidy vegetation data
 ```{r join veg & coordinates}
@@ -321,6 +327,9 @@ unique <- unique(island_veg_all$spp)
 sort(unique)
 ```
 
+```{r writing-CSVs}
+write_csv(island_veg_all, "island_veg_all.csv")
 
+```
 
 
