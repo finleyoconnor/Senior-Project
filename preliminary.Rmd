@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
+library(dplyr)
 library(magrittr)
 library(broom)
 library(leaflet) ## For leaflet interactive maps
@@ -29,14 +30,17 @@ library(naniar)
 library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
+library(lme4)
+library(afex) #pulls p-values from GLM
+library(partR2) #derive r2 values from GLM
 ```
 
 ### READ IN DATA
 ```{r read-in-vegetation-file, echo = FALSE}
-island_veg <- read_csv("data/island_veg.csv")
-veg_attributes <- read_csv("data/plotpointsattributes.csv")
-gdi_attributes <- read_csv("data/gdipointsattributes.csv")
-smpl_attributes <- read_csv("data/sampled.csv")
+island_veg <- read_csv("gitdata/island_veg.csv")
+veg_attributes <- read_csv("gitdata/plotpointsattributes.csv")
+gdi_attributes <- read_csv("gitdata/gdipointsattributes.csv")
+smpl_attributes <- read_csv("gitdata/sampled.csv")
 ```
 ```{r fix-gdi-attributes}
 gdi_attributes <- gdi_attributes %>%
@@ -48,10 +52,10 @@ veg_attributes <- full_join(veg_attributes, gdi_attributes)
 ```
 -
 ```{r read-in-bird-files, echo = FALSE}
-gdi_bird <- st_read("data/gull data/gdi_nests/gdi_nests_Merge.shp")
-heron_bird <- st_read("data/gull data/heron_nests/herg_nests_heron.shp")
-schoodic_bird <- st_read("data/gull data/schoodic_nests/all_nests.shp")
-shabby_bird <- st_read("data/gull data/shabby_nests/gull_eider_nests.shp")
+gdi_bird <- st_read("gitdata/gull data/gdi_nests/gdi_nests_Merge.shp")
+heron_bird <- st_read("gitdata/gull data/heron_nests/herg_nests_heron.shp")
+schoodic_bird <- st_read("gitdata/gull data/schoodic_nests/all_nests.shp")
+shabby_bird <- st_read("gitdata/gull data/shabby_nests/gull_eider_nests.shp")
 ```
 
 ###TIDYING
@@ -257,8 +261,7 @@ island_veg_all$type <- "NA"
 -
 ```{r assign-veg-types}
 island_veg_all <- island_veg_all %>%
-  # select(location:percent_cover_range) %>%
-   mutate(type = case_when(
+    mutate(type = case_when(
     spp == "Achillea millefolium" ~ "herb",
     spp == "Agrostis scabra" ~ "gram",
     spp == "Agrostis stolonifera" ~ "gram",
@@ -320,7 +323,76 @@ island_veg_all <- island_veg_all %>%
 unique <- unique(island_veg_all$spp)
 sort(unique)
 ```
+```{r}
+unique(island_veg_all$gps)
+```
 
 
+```{r}
+rich.notna <- island_veg_all %>%
+  filter(!(is.na(spp))) %>%
+  group_by(gps) %>%
+  count(gps) %>% 
+  rename(sp_richness = n) #sp richness count for non-na rows
 
+rich.na <- island_veg_all %>%
+  filter(is.na(spp)) %>%
+  mutate(sp_richness = 0) #sp richness count for NAs
+
+filtered <- island_veg_all %>%
+  select(location,gps,cover,height, POINT_X, POINT_Y)
+
+model.vars <- rbind(rich.notna,rich.na) %>%
+  select(1:2) %>%
+  left_join(filtered, by = "gps") %>%
+  distinct(gps, .keep_all = TRUE)
+```
+
+```{r}
+test <- island_veg_all %>%
+  select(gps, type) %>%
+  mutate(presence = "yes") %>%
+  pivot_wider(id_cols = gps, names_from = type, values_from = presence) %>%
+  mutate(herb = case_when(herb == "NULL" ~ "no",
+                          TRUE ~ "yes")) %>%
+  mutate(vine = case_when(vine == "NULL" ~ "no",
+                          TRUE ~ "yes")) %>%
+  mutate(shrub = case_when(shrub == "NULL" ~ "no",
+                          TRUE ~ "yes")) %>%
+  mutate(gram = case_when(gram == "NULL" ~ "no",
+                          TRUE ~ "yes"))
+
+structure <- test %>%
+  select(gps, herb, vine, gram, shrub)
+
+model.vars <- model.vars %>%
+  left_join(structure, by = "gps")
+``` 
+
+```{r read in non-GDI bird counts}
+herg_count <- read_excel("gitdata/herg_buff_count_TableToExcel.xlsx")
+coei_count <- read_excel("gitdata/coei_buff_count_TableToExcel.xlsx")
+gbbg_count <- read_excel("gitdata/gbbg_buff_count_TableToExcel.xlsx")
+```
+
+```{r read in GDI bird counts}
+gdi_herg_count <- read_excel("gitdata/gdi_herg_buff_count.xls")
+gdi_coei_count <- read_excel("gitdata/gdi_coei_buff_count.xls")
+gdi_gbbg_count <- read_excel("gitdata/gdi_gbbg_buff_count_TableToExcel.xlsx")
+```
+
+```{r fix GDI bird counts}
+gdi_herg_count <- gdi_herg_count %>%
+  mutate(name = paste0('gdi',gdi_herg_count$OBJECTID))
+
+gdi_coei_count <- gdi_coei_count %>%
+  mutate(name = paste0('gdi',gdi_coei_count$OBJECTID))
+
+gdi_gbbg_count <- gdi_gbbg_count %>%
+  mutate(name = paste0('gdi',gdi_gbbg_count$OBJECTID))
+```
+
+```{r mixed effects model}
+
+```
 
