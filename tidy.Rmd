@@ -1,0 +1,229 @@
+---
+title: "tidy"
+author: "Finley O'Connor"
+date: "2024-04-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages, message = FALSE}
+library(tidyverse)
+library(dplyr)
+library(magrittr)
+library(broom)
+library(leaflet) ## For leaflet interactive maps
+library(sf) ## For spatial data
+library(RColorBrewer) ## For colour palettes
+library(htmltools) ## For html
+library(leafsync) ## For placing plots side by side
+library(stringr) ## For character string manipulation
+library(kableExtra) ## Table  output (in slides)
+library(visdat)
+library(naniar)
+library(readxl) ##working with xcel sheets
+library(ggridges)
+library(dataCompareR)
+library(lme4)
+library(afex) #pulls p-values from GLM
+library(partR2) #derive r2 values from GLM
+```
+
+```{r read-in-vegetation-file, echo = FALSE}
+island_veg <- read_csv("gitdata/island_veg_amended.csv")
+veg_attributes <- read_csv("gitdata/plotpointsattributes.csv")
+gdi_attributes <- read_csv("gitdata/gdipointsattributes.csv")
+
+```
+
+```{r fix-gdi-attributes}
+gdi_attributes <- gdi_attributes %>%
+  mutate(name = paste0('gdi',gdi_attributes$OID_))
+```
+
+```{r join-gdi}
+veg_attributes <- full_join(veg_attributes, gdi_attributes)
+```
+```{r join veg & coordinates}
+island_veg <- island_veg %>% 
+  mutate(name = gps)
+
+island_veg_all <- island_veg %>% 
+                  left_join(veg_attributes, island_veg, by = "name")
+```
+-
+```{r standardize-island-naming}
+island_veg_all <- island_veg_all %>%
+  mutate(location = case_when(
+    location == "Schoodic" ~ "schoodic",
+    location == "GDI" ~ "gdi",
+    TRUE ~ location
+  ))
+```
+
+```{r recode-veg-height}
+ island_veg_all <- island_veg_all %>%
+mutate(height_class = case_when(TRUE ~ as.factor(height))) #making height class a factor variable in order to use it in a bar chart
+```
+
+```{r create-veg-types}
+island_veg_all$type <- "NA"
+```
+
+```{r}
+spp_list <- unique(island_veg_all$spp)
+spp_list <- as.data.frame(spp_list)
+```
+
+```{r assign-veg-types}
+island_veg_all <- island_veg_all %>%
+    mutate(type = case_when(
+      spp == "Valeriana officionalis" ~ "herb",
+      spp == "Taraxacum officionale" ~ "herb",
+      spp == "Urtica dioica" ~ "herb",
+      spp == "Fragaria virginiana" ~ "herb",
+      spp == "Cerastium arvense" ~ "herb",
+      spp == "Veronica arvensis"~ "herb",
+      spp == "Solidago puberula"~ "herb",
+      spp == "Solanum dulcamara"~ "herb",
+      spp == "Cirsium vulgare"~ "herb",
+      spp == "Calystegia sepium"~ "vine",
+      spp == "Poa trivialis"~ "gram",
+      spp == "Trifolium repens"~ "herb",
+      spp == "Ranunculus acris"~ "herb",
+      spp == "Poa pratensis"~ "gram",
+      spp == "Lathyrus palustris"~ "vine",
+      spp == "Rubus idaeus"~ "shrub",
+      spp == "Alepecurus pratensis"~ "gram",
+      spp == "Solidago sempervirens"~ "herb",
+      spp == "Galium sylvaticum"~ "herb",
+      spp == "Plantago major"~ "herb",
+      spp == "Poa spp (tufting)"~ "gram",
+      spp == "Lathyrus japonicus"~ "vine",
+      spp == "Iris versicolor" ~ "herb",
+      spp == "Scutellaria galericulata"~ "herb",
+      spp == "Potentilla anserina"~ "herb",
+      spp == "Elymus repens"~ "gram",
+      spp == "Achillea millefolium"~ "herb",
+      spp == "Maianthemum canadense"~ "herb",
+      spp == "Carex silicea"~ "gram",
+      spp == "Rumex pallidus"~ "herb",
+      spp == "Arctium sp."~ "herb",
+      spp == "Cirsium sp."~ "herb",
+      spp == "young yarrow? #56"~ "herb",
+      spp == "Mentha canadensis"~ "herb",
+      spp == "Epilobium ciliatum"~ "herb",
+      spp == "Atriplex subspicata"~ "herb",
+      spp == "Capsella bursa-pastoris"~ "herb",
+      spp == "Matricaria discoidea"~ "herb",
+      spp == "Festuca rubra"~ "gram",
+      spp == "Doellingeria umbellata"~ "herb",
+      spp == "Rubus hispidus"~ "shrub",
+      spp == "Agrostis stolonifera"~ "gram",
+      spp == "Hieracium caespitosum"~ "herb",
+      spp == "Rumex acetosella"~ "herb",
+      spp == "Rumex britannica"~ "herb",
+      spp == "Solidago rugosa"~ "herb",
+      spp == "Cuscuta gronovii"~ "vine",
+      spp == "Impatiens capensis"~ "herb",
+      spp == "Angelica lucida"~ "herb",
+      spp == "Cornus canadensis" ~ "herb",
+      spp == "Moehringia lateriflora" ~ "herb",
+      spp == "Carex nigra" ~ "gram",
+      spp == "Vaccinium angustifolium" ~ "shrub",
+      spp == "Luzula multiflora" ~ "gram",
+      spp == "Anthoxanthum odoratum" ~ "gram",
+      spp == "Stellaria media" ~ "herb",
+      spp == "Myrica gale" ~ "shrub",
+      spp == "Rumex crispus" ~ "herb",
+      spp == "Plantago maritima" ~ "herb",
+      spp == "Cirsium arvense" ~ "herb",
+      spp == "Galeopsis bifida" ~ "herb",
+      spp == "Elymus trachycaulus" ~ "gram",
+      spp == "Ribes glandulosum" ~ "shrub",
+      spp == "Osmundastrum cinnamomeum" ~ "herb",
+      spp == "Rumex sp." ~ "herb",
+      spp == "Raphanus raphanistrum" ~ "herb",
+      spp == "Spiraea alba" ~ "shrub",
+      spp == "Symphyotrichum novae-angliae" ~ "herb",
+      spp == "Lycopus uniflorus" ~ "herb",
+      spp == "Agrostis scabra" ~ "gram",
+      spp == "Cerastium fontanum" ~ "herb",
+      spp == "Potentilla simplex" ~ "herb",
+      spp == "Potentilla norvegica" ~ "herb",
+      spp == "Rumex longifolius" ~ "herb",
+      TRUE ~ type
+      ))
+```
+
+```{r}
+rich.notna <- island_veg_all %>%
+  filter(!(is.na(spp))) %>%
+  group_by(gps) %>%
+  count(gps) %>% 
+  rename(sp_richness = n) #sp richness count for non-na rows
+
+rich.na <- island_veg_all %>%
+  filter(is.na(spp)) %>%
+  mutate(sp_richness = 0) #sp richness count for NAs
+
+filtered <- island_veg_all %>%
+  select(location,gps,date,cover,height, POINT_X, POINT_Y)
+
+model.vars <- rbind(rich.notna,rich.na) %>%
+  select(1:2) %>%
+  left_join(filtered, by = "gps") %>%
+  distinct(gps, .keep_all = TRUE)
+```
+
+```{r}
+test <- island_veg_all %>%
+  select(gps, type) %>%
+  mutate(presence = "yes") %>%
+  pivot_wider(id_cols = gps, names_from = type, values_from = presence) %>%
+  mutate(herb = case_when(herb == "NULL" ~ "no",
+                          TRUE ~ "yes")) %>%
+  mutate(vine = case_when(vine == "NULL" ~ "no",
+                          TRUE ~ "yes")) %>%
+  mutate(shrub = case_when(shrub == "NULL" ~ "no",
+                          TRUE ~ "yes")) %>%
+  mutate(gram = case_when(gram == "NULL" ~ "no",
+                          TRUE ~ "yes"))
+
+structure <- test %>%
+  select(gps, herb, vine, gram, shrub)
+
+model.vars <- model.vars %>%
+  left_join(structure, by = "gps")
+``` 
+
+```{r read in non-GDI bird counts}
+herg_count <- read_excel("gitdata/herg_buff_count_TableToExcel.xlsx")
+coei_count <- read_excel("gitdata/coei_buff_count_TableToExcel.xlsx")
+gbbg_count <- read_excel("gitdata/gbbg_buff_count_TableToExcel.xlsx")
+```
+
+```{r read in GDI bird counts}
+gdi_herg_count <- read_excel("gitdata/gdi_herg_buff_count.xls")
+gdi_coei_count <- read_excel("gitdata/gdi_coei_buff_count.xls")
+gdi_gbbg_count <- read_excel("gitdata/gdi_gbbg_buff_count_TableToExcel.xlsx")
+```
+
+```{r fix GDI bird counts}
+gdi_herg_count <- gdi_herg_count %>%
+  mutate(name = paste0('gdi',gdi_herg_count$OBJECTID))
+
+gdi_coei_count <- gdi_coei_count %>%
+  mutate(name = paste0('gdi',gdi_coei_count$OBJECTID))
+
+gdi_gbbg_count <- gdi_gbbg_count %>%
+  mutate(name = paste0('gdi',gdi_gbbg_count$OBJECTID))
+```
+
+```{r mixed effects model}
+
+```
+
+
