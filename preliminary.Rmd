@@ -30,9 +30,13 @@ library(naniar)
 library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
+<<<<<<< HEAD
 library(lme4)
 library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
+=======
+library(stringr)
+>>>>>>> 8601b15cacd197232bef8c64df4d90eccdd6d0db
 ```
 
 ### READ IN DATA
@@ -104,6 +108,11 @@ island_bird <- rbind(gdi_bird_all, heron_bird_all, shabby_bird_all, schoodic_bir
 #update bird data to the coordinate system used in leaflet
 island_bird <- st_transform(island_bird, "+init=epsg:4326")
 ```
+
+```{r mutate_column_for_long_and_lat}
+island_bird$geometry
+```
+
 
 #Tidy vegetation data
 ```{r join veg & coordinates}
@@ -328,12 +337,19 @@ unique(island_veg_all$gps)
 ```
 
 
+<<<<<<< HEAD
 ```{r}
 rich.notna <- island_veg_all %>%
   filter(!(is.na(spp))) %>%
   group_by(gps) %>%
   count(gps) %>% 
   rename(sp_richness = n) #sp richness count for non-na rows
+=======
+```{r writing-CSVs}
+write_csv(island_veg_all, "island_veg_all.csv")
+
+```
+>>>>>>> 8601b15cacd197232bef8c64df4d90eccdd6d0db
 
 rich.na <- island_veg_all %>%
   filter(is.na(spp)) %>%
