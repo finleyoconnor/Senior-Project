@@ -33,6 +33,7 @@ library(dataCompareR)
 library(lme4)
 library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
+library(stringr)
 ```
 
 ### READ IN DATA
@@ -42,6 +43,7 @@ veg_attributes <- read_csv("gitdata/plotpointsattributes.csv")
 gdi_attributes <- read_csv("gitdata/gdipointsattributes.csv")
 smpl_attributes <- read_csv("gitdata/sampled.csv")
 ```
+
 ```{r fix-gdi-attributes}
 gdi_attributes <- gdi_attributes %>%
   mutate(name = paste0('gdi',gdi_attributes$OID_))
@@ -104,6 +106,11 @@ island_bird <- rbind(gdi_bird_all, heron_bird_all, shabby_bird_all, schoodic_bir
 #update bird data to the coordinate system used in leaflet
 island_bird <- st_transform(island_bird, "+init=epsg:4326")
 ```
+
+```{r mutate_column_for_long_and_lat}
+island_bird$geometry
+```
+
 
 #Tidy vegetation data
 ```{r join veg & coordinates}
@@ -328,6 +335,7 @@ unique(island_veg_all$gps)
 ```
 
 
+<<<<<<< HEAD
 ```{r}
 rich.notna <- island_veg_all %>%
   filter(!(is.na(spp))) %>%
@@ -335,6 +343,14 @@ rich.notna <- island_veg_all %>%
   count(gps) %>% 
   rename(sp_richness = n) #sp richness count for non-na rows
 
+```
+
+```{r writing-CSVs}
+write_csv(island_veg_all, "island_veg_all.csv")
+
+```
+
+```{r}
 rich.na <- island_veg_all %>%
   filter(is.na(spp)) %>%
   mutate(sp_richness = 0) #sp richness count for NAs
