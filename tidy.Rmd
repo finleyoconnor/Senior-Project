@@ -27,7 +27,7 @@ library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
 library(lme4)
-library(afex) #pulls p-values from GLM
+#library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
 ```
 
@@ -199,6 +199,7 @@ model.vars <- model.vars %>%
   left_join(structure, by = "gps")
 ``` 
 
+
 ```{r read in non-GDI bird counts}
 herg_count <- read_excel("gitdata/herg_buff_count_TableToExcel.xlsx")
 coei_count <- read_excel("gitdata/coei_buff_count_TableToExcel.xlsx")
@@ -213,17 +214,47 @@ gdi_gbbg_count <- read_excel("gitdata/gdi_gbbg_buff_count_TableToExcel.xlsx")
 
 ```{r fix GDI bird counts}
 gdi_herg_count <- gdi_herg_count %>%
-  mutate(name = paste0('gdi',gdi_herg_count$OBJECTID))
+  mutate(gps = paste0('gdi',gdi_herg_count$OBJECTID))
 
 gdi_coei_count <- gdi_coei_count %>%
-  mutate(name = paste0('gdi',gdi_coei_count$OBJECTID))
+  mutate(gps = paste0('gdi',gdi_coei_count$OBJECTID))
 
 gdi_gbbg_count <- gdi_gbbg_count %>%
-  mutate(name = paste0('gdi',gdi_gbbg_count$OBJECTID))
+  mutate(gps = paste0('gdi',gdi_gbbg_count$OBJECTID))
 ```
 
-```{r mixed effects model}
+```{r tidy and join bird count dataframes }
 
+#combine GDI and all other islands
+herg_buff <- bind_rows(gdi_herg_count, herg_count)
+coei_buff <- bind_rows(gdi_coei_count, coei_count)
+gbbg_buff <- bind_rows(gdi_gbbg_count, gbbg_count)
+
+#trim down to sampled points
+herg_buff <- herg_buff %>%
+  select(Join_Count, gps) %>%
+  subset(gps %in% model.vars$gps)
+coei_buff <- coei_buff %>%
+  select(Join_Count, gps) %>%
+  subset(gps %in% model.vars$gps)
+gbbg_buff <- gbbg_buff %>%
+  select(Join_Count, gps) %>%
+  subset(gps %in% model.vars$gps)
+
+#join bird counts with model.var
+herg.vars <- model.vars %>%
+  left_join(herg_buff, by = "gps")
+coei.vars <- model.vars %>%
+  left_join(coei_buff, by = "gps")
+gbbg.vars <- model.vars %>%
+  left_join(gbbg_buff, by = "gps")
+```
+
+
+#separate mixed effects model for all bird species
+```{r mixed effects model}
+lm.herg <- herg.vars %>%
+  lme4::lmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub)
 ```
 
 
