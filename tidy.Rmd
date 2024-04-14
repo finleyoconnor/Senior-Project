@@ -181,16 +181,16 @@ model.vars <- rbind(rich.notna,rich.na) %>%
 ```{r}
 test <- island_veg_all %>%
   select(gps, type) %>%
-  mutate(presence = "yes") %>%
+  mutate(presence = "1") %>%
   pivot_wider(id_cols = gps, names_from = type, values_from = presence) %>%
-  mutate(herb = case_when(herb == "NULL" ~ "no",
-                          TRUE ~ "yes")) %>%
-  mutate(vine = case_when(vine == "NULL" ~ "no",
-                          TRUE ~ "yes")) %>%
-  mutate(shrub = case_when(shrub == "NULL" ~ "no",
-                          TRUE ~ "yes")) %>%
-  mutate(gram = case_when(gram == "NULL" ~ "no",
-                          TRUE ~ "yes"))
+  mutate(herb = case_when(herb == "NULL" ~ "0",
+                          TRUE ~ "1")) %>%
+  mutate(vine = case_when(vine == "NULL" ~ "0",
+                          TRUE ~ "1")) %>%
+  mutate(shrub = case_when(shrub == "NULL" ~ "0",
+                          TRUE ~ "1")) %>%
+  mutate(gram = case_when(gram == "NULL" ~ "0",
+                          TRUE ~ "1"))
 
 structure <- test %>%
   select(gps, herb, vine, gram, shrub)
@@ -254,7 +254,7 @@ gbbg.vars <- model.vars %>%
 #separate mixed effects model for all bird species
 ```{r mixed effects model}
 lm.herg <- herg.vars %>%
-  lme4::lmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub)
+  lme4::lmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location))
 ```
 
 
