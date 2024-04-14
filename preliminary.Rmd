@@ -367,7 +367,7 @@ model.vars <- rbind(rich.notna,rich.na) %>%
 ```{r}
 test <- island_veg_all %>%
   select(gps, type) %>%
-  mutate(presence = "yes") %>%
+  mutate(presence = "1") %>%
   pivot_wider(id_cols = gps, names_from = type, values_from = presence) %>%
   mutate(herb = case_when(herb == "NULL" ~ "no",
                           TRUE ~ "yes")) %>%
