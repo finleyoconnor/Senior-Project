@@ -26,8 +26,9 @@ library(naniar)
 library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
+
 library(lme4)
-#library(afex) #pulls p-values from GLM
+library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
 ```
 
@@ -253,8 +254,7 @@ gbbg.vars <- model.vars %>%
 
 #separate mixed effects model for all bird species
 ```{r mixed effects model}
-lm.herg <- herg.vars %>%
-  lme4::lmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location))
+lm.herg <-  lme4::lmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), data = herg.vars)
 ```
 
 
