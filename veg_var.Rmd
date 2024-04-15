@@ -6,41 +6,41 @@ output: html_document
 ---
 #Loading data
 ```{r read-in-data, message = FALSE, warning=FALSE}
-island_veg_all <- read_csv("island_veg_all.csv")
+# island_veg_all <- read_csv("island_veg_all.csv")
 ```
 
 
 #Tidying?
 This is counting how many species each PLOT has - this does not account for the `NA`s within the dataset, which will need to be addressed later. 
 ```{r}
-island_veg_all_count <- island_veg_all %>%
-  group_by(gps) %>% 
-  count(spp) %>% 
-  count(n) %>%
-  mutate(spp_count = nn) %>% 
-  select(-nn)
-
-island_veg_all <- island_veg_all %>% 
-                  left_join(island_veg_all_count, island_veg, by = "gps")
+# island_veg_all_count <- island_veg_all %>%
+#   group_by(gps) %>% 
+#   count(spp) %>% 
+#   count(n) %>%
+#   mutate(spp_count = nn) %>% 
+#   select(-nn)
+# 
+# island_veg_all <- island_veg_all %>% 
+#                   left_join(island_veg_all_count, island_veg, by = "gps")
 ```
 
 This is separating the data file into separate data frames by island?
 ```{r}
-# Heron
-heron_veg_all <- island_veg_all %>% 
-  filter(location == "heron")
-
-# Schoodic
-schoodic_veg_all <- island_veg_all %>% 
-  filter(location == "schoodic")
-
-# shabby
-shabby_veg_all <- island_veg_all %>% 
-  filter(location == "shabby")
-
-# gdi
-gdi_veg_all <- island_veg_all %>% 
-  filter(location == "gdi")
+# # Heron
+# heron_veg_all <- island_veg_all %>% 
+#   filter(location == "heron")
+# 
+# # Schoodic
+# schoodic_veg_all <- island_veg_all %>% 
+#   filter(location == "schoodic")
+# 
+# # shabby
+# shabby_veg_all <- island_veg_all %>% 
+#   filter(location == "shabby")
+# 
+# # gdi
+# gdi_veg_all <- island_veg_all %>% 
+#   filter(location == "gdi")
 ```
 
 This is counting how many species each ISLAND has - this does not account for the `NA`s within the dataset, which will need to be addressed later.
@@ -79,5 +79,63 @@ contingency_table_heron
 
 ```{r}
 chisq.test(contingency_table_heron)
+```
+
+# Analysis of Nests vs. Vegetation
+
+```{r contingency-table-veg}
+ct_cover_nest <- table(bird.vars$Join_Count, bird.vars$cover)
+ct_cover_nest
+
+#fisher's exact test
+fisher.test(ct_cover_nest, simulate.p.value = TRUE)
+
+#chi squared test
+chisq.test(ct_cover_nest)
+```
+## Species
+```{r}
+#cover
+ct_species_coei <- table(coei.vars$Join_Count, coei.vars$cover)
+ct_species_coei
+
+fisher.test(ct_species_coei)
+
+chisq.test(ct_species_coei)
+```
+
+```{r coei-shrub}
+#shrub
+ct_species_coei_shrub <- table(coei.vars$Join_Count, coei.vars$shrub)
+ct_species_coei_shrub
+
+fisher.test(ct_species_coei_shrub)
+
+chisq.test(ct_species_coei_shrub)
+```
+```{r coei-shrub}
+#vine
+fisher.test(table(coei.vars$Join_Count, coei.vars$vine))
+
+chisq.test(table(coei.vars$Join_Count, coei.vars$vine))
+```
+```{r coei-shrub}
+#herb
+fisher.test(table(coei.vars$Join_Count, coei.vars$herb))
+```
+
+## HERG
+```{r}
+#height
+fisher.test(table(herg.vars$Join_Count, herg.vars$height))
+
+#cover
+fisher.test(table(herg.vars$Join_Count, herg.vars$cover))
+
+#vegetation type
+kruskal.test(herb~Join_Count, data = herg.vars)
+kruskal.test(vine~Join_Count, data = herg.vars)
+kruskal.test(shrub~Join_Count, data = herg.vars)
+kruskal.test(gram~Join_Count, data = herg.vars)
 ```
 
