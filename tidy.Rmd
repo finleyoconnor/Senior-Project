@@ -182,7 +182,7 @@ model.vars <- rbind(rich.notna,rich.na) %>%
 ```
 
 ```{r}
-test <- island_veg_all %>%
+structure <- island_veg_all %>%
   select(gps, type) %>%
   mutate(presence = "1") %>%
   pivot_wider(id_cols = gps, names_from = type, values_from = presence) %>%
@@ -193,13 +193,20 @@ test <- island_veg_all %>%
   mutate(shrub = case_when(shrub == "NULL" ~ "0",
                           TRUE ~ "1")) %>%
   mutate(gram = case_when(gram == "NULL" ~ "0",
-                          TRUE ~ "1"))
-
-structure <- test %>%
+                          TRUE ~ "1")) %>%
   select(gps, herb, vine, gram, shrub)
 
-model.vars <- model.vars %>%
-  left_join(structure, by = "gps")
+structure <- structure %>% 
+  mutate(herb = as.numeric(herb)) %>%
+  mutate(vine = as.numeric(vine)) %>%
+  mutate(shrub = as.numeric(shrub)) %>%
+  mutate(gram = as.numeric(gram))
+
+# structure <- test %>%
+#   select(gps, herb, vine, gram, shrub)
+
+ model.vars <- left_join(model.vars, structure, by = "gps")
+
 ``` 
 
 
@@ -242,14 +249,14 @@ coei_buff <- bind_rows(gdi_coei_count, coei_count)
 gbbg_buff <- bind_rows(gdi_gbbg_count, gbbg_count)
 
 #trim down to sampled points
-herg_buff <- herg_buff
+herg_buff <- herg_buff %>%
   select(Join_Count, gps, species) %>%
   subset(gps %in% model.vars$gps)
 coei_buff <- coei_buff %>%
-  select(coei_buff$Join_Count, coei_buff$gps, coei_buff$species) %>%
+  select(Join_Count, gps, species) %>%
   subset(gps %in% model.vars$gps)
 gbbg_buff <- gbbg_buff %>%
-  select(gbbg_buff$Join_Count, gbbg_buff$gps, gbbg_buff$species) %>%
+  select(Join_Count, gps, species) %>%
   subset(gps %in% model.vars$gps)
 
 #join bird counts with model.var
@@ -269,19 +276,22 @@ bird.vars <- bind_rows(herg.vars, coei.vars, gbbg.vars)
 ```{r mixed effects model}
 lm.herg <-  lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson(link  = log), data = herg.vars)
 
-# plot(lm.herg)
-# lm.herg
+plot(lm.herg)
+lm.herg
 
 ```
 
 ```{r}
 lm.coei <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = coei.vars)
 
-plot(lm.coei)
 lm.coei
+plot(lm.coei)
+```
+```{r}
+lm.bird <- glmer(Join_Count ~ species + sp_richness + (1|POINT_X) + (1|POINT_Y), family = poisson(link = log), data = bird.vars)
 ```
 
 ```{r}
-lm.bird <-
+lmtmb.bird <- glmmTMB(Join_Count ~ species + (1|location), data = bird.vars, family = compois(link = log), ziformula = ~., )
 ```
 
