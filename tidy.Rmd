@@ -27,10 +27,14 @@ library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
 
+install.packages("partR2")
+
 library(lme4)
 library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
+install.packages("TMB")
 library(TMB)
+install.packages("glmmTMB")
 library(glmmTMB)
 ```
 
@@ -40,11 +44,11 @@ veg_attributes <- read_csv("gitdata/plotpointsattributes.csv")
 gdi_attributes <- read_csv("gitdata/gdipointsattributes.csv")
 
 ```
-
 ```{r fix-gdi-attributes}
 gdi_attributes <- gdi_attributes %>%
   mutate(name = paste0('gdi',gdi_attributes$OID_))
 ```
+
 
 ```{r join-gdi}
 veg_attributes <- full_join(veg_attributes, gdi_attributes)
@@ -161,7 +165,8 @@ island_veg_all <- island_veg_all %>%
       ))
 ```
 
-```{r}
+
+```{r species-richness-variable-model}
 rich.notna <- island_veg_all %>%
   filter(!(is.na(spp))) %>%
   group_by(gps) %>%
@@ -181,7 +186,7 @@ model.vars <- rbind(rich.notna,rich.na) %>%
   distinct(gps, .keep_all = TRUE)
 ```
 
-```{r}
+```{r structure-varible-for-model}
 structure <- island_veg_all %>%
   select(gps, type) %>%
   mutate(presence = "1") %>%
