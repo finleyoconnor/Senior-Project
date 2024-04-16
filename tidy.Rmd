@@ -69,8 +69,8 @@ island_veg_all <- island_veg_all %>%
 
 ```{r recode-veg-height}
  island_veg_all <- island_veg_all %>%
-mutate(height_class = case_when(TRUE ~ as.factor(height))) %>% #making height class a factor variable
-mutate(cover_class = case_when(TRUE ~ as.factor(cover))) #making cover class a factor variable
+mutate(height_class = case_when(TRUE ~ as.ordered(height))) %>% #making height class a factor variable
+mutate(cover_class = case_when(TRUE ~ as.ordered(cover))) #making cover class a factor variable
 ```
 
 ```{r create-veg-types}
@@ -243,6 +243,86 @@ island_veg_all <- island_veg_all %>%
       TRUE ~ "0"
       )) %>%
   mutate(arm = as.numeric(arm))
+
+
+island_veg_all <- island_veg_all %>%
+    mutate(genus = case_when(
+      spp == "Valeriana officionalis" ~ "Valeriana",
+      spp == "Taraxacum officionale" ~ "Taraxacum",
+      spp == "Urtica dioica" ~ "Urtica",
+      spp == "Fragaria virginiana" ~ "Fragaria",
+      spp == "Cerastium arvense" ~ "Cerastium",
+      spp == "Veronica arvensis"~ "Veronica",
+      spp == "Solidago puberula"~ "Solidago",
+      spp == "Solanum dulcamara"~ "Solanum",
+      spp == "Cirsium vulgare"~ "Cirsium",
+      spp == "Calystegia sepium"~ "Calystegia",
+      spp == "Poa trivialis"~ "Poa",
+      spp == "Trifolium repens"~ "Trifolium",
+      spp == "Ranunculus acris"~ "Ranunculus",
+      spp == "Poa pratensis"~ "Poa",
+      spp == "Lathyrus palustris"~ "Lathyrus",
+      spp == "Rubus idaeus"~ "Rubus idaeus",
+      spp == "Alepecurus pratensis"~ "Alepecurus",
+      spp == "Solidago sempervirens"~ "Solidago",
+      spp == "Galium sylvaticum"~ "Galium",
+      spp == "Plantago major"~ "Plantago",
+      spp == "Poa spp (tufting)"~ "Poa",
+      spp == "Lathyrus japonicus"~ "Lathyrus",
+      spp == "Iris versicolor" ~ "Iris",
+      spp == "Scutellaria galericulata"~ "Scutellaria",
+      spp == "Potentilla anserina"~ "Potentilla",
+      spp == "Elymus repens"~ "Elymus",
+      spp == "Achillea millefolium"~ "Achillea",
+      spp == "Maianthemum canadense"~ "Maianthemum",
+      spp == "Carex silicea"~ "Carex",
+      spp == "Rumex pallidus"~ "Rumex",
+      spp == "Arctium sp."~ "Arctium",
+      spp == "Cirsium sp."~ "Cirsium",
+      spp == "young yarrow? #56"~ "Achillea",
+      spp == "Mentha canadensis"~ "Mentha",
+      spp == "Epilobium ciliatum"~ "Epilobium",
+      spp == "Atriplex subspicata"~ "Atriplex",
+      spp == "Capsella bursa-pastoris"~ "Capsella",
+      spp == "Matricaria discoidea"~ "Matricaria",
+      spp == "Festuca rubra"~ "Festuca",
+      spp == "Doellingeria umbellata"~ "Doellingeria",
+      spp == "Rubus hispidus"~ "Rubus hispidus",
+      spp == "Agrostis stolonifera"~ "Agrostis",
+      spp == "Hieracium caespitosum"~ "Hieracium",
+      spp == "Rumex acetosella"~ "Rumex",
+      spp == "Rumex britannica"~ "Rumex",
+      spp == "Solidago rugosa"~ "Solidago",
+      spp == "Cuscuta gronovii"~ "Cuscuta",
+      spp == "Impatiens capensis"~ "Impatiens",
+      spp == "Angelica lucida"~ "Angelica",
+      spp == "Cornus canadensis" ~ "Cornus",
+      spp == "Moehringia lateriflora" ~ "Moehringia",
+      spp == "Carex nigra" ~ "Carex",
+      spp == "Vaccinium angustifolium" ~ "Vaccinium",
+      spp == "Luzula multiflora" ~ "Luzula",
+      spp == "Anthoxanthum odoratum" ~ "Anthoxanthum",
+      spp == "Stellaria media" ~ "Stellaria",
+      spp == "Myrica gale" ~ "Myrica",
+      spp == "Rumex crispus" ~ "Rumex",
+      spp == "Plantago maritima" ~ "Plantago",
+      spp == "Cirsium arvense" ~ "Cirsium",
+      spp == "Galeopsis bifida" ~ "Galeopsis",
+      spp == "Elymus trachycaulus" ~ "Elymus",
+      spp == "Ribes glandulosum" ~ "Ribes",
+      spp == "Osmundastrum cinnamomeum" ~ "Osmundastrum",
+      spp == "Rumex sp." ~ "Rumex",
+      spp == "Raphanus raphanistrum" ~ "Raphanus",
+      spp == "Spiraea alba" ~ "Spiraea",
+      spp == "Symphyotrichum novae-angliae" ~ "Symphotryichum",
+      spp == "Lycopus uniflorus" ~ "Lycopus",
+      spp == "Agrostis scabra" ~ "Agrostis",
+      spp == "Cerastium fontanum" ~ "Cerastium",
+      spp == "Potentilla simplex" ~ "Potentilla",
+      spp == "Potentilla norvegica" ~ "Potentilla",
+      spp == "Rumex longifolius" ~ "Rumex",
+      TRUE ~ spp
+      ))
 ```
 
 ```{r}
