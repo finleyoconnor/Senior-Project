@@ -32,3 +32,100 @@ height_color <- c("0-0.15" = "#ffffb2",
                   "1.5+" = "#bd0026")
 ```
 
+```{r}
+#veg frequency: SHABBY
+island_veg_all %>%
+  filter(location == "shabby") %>%
+  ggplot(mapping = aes(y = spp)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Species Frequency (Shabby Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+#veg frequency: GDI
+island_veg_all %>%
+  filter(location == "gdi") %>%
+  ggplot(mapping = aes(y = spp)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Species Frequency (Great Duck Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+#veg frequency: SCHOODIC
+island_veg_all %>%
+  filter(location == "schoodic") %>% 
+  ggplot(mapping = aes(y = spp)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Species Frequency (Schoodic Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+#veg frequency: HERON
+island_veg_all %>%
+  filter(location == "heron") %>% 
+  ggplot(mapping = aes(y = spp)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Species Frequency (Heron Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+```
+
+
+```{r genus freq}
+island_veg_all %>%
+  filter(location == "heron") %>% 
+  ggplot(mapping = aes(y = genus)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Genus Frequency (Heron Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+island_veg_all %>%
+  filter(location == "schoodic") %>% 
+  ggplot(mapping = aes(y = genus)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Genus Frequency (Schoodic Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+island_veg_all %>%
+  filter(location == "gdi") %>% 
+  ggplot(mapping = aes(y = genus)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Genus Frequency (Great Duck Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+island_veg_all %>%
+  filter(location == "shabby") %>% 
+  ggplot(mapping = aes(y = genus)
+    ) +
+  geom_bar(fill = "#21918c") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() + 
+  labs(title = "Genus Frequency (Shabby Island)",
+       x = "Number of occurences",
+       y = "Scientific names")
+```
+
