@@ -11,20 +11,83 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #glm for each island
 ```{r}
-glm.shab <- glm(Join_Count ~ species + height + cover + sp_richness + herb + vine + gram + shrub, family = poisson(link = log), data = shab.vars)
+glm.shab <- glm(Join_Count ~ species + height_class + cover_class + sp_richness + herb + vine + gram + shrub, family = poisson(link = log), data = shab.vars)
 summary(glm.shab)
 qqnorm(resid(glm.shab))
 ```
 
 #separate mixed effects models for all bird species
 ```{r herg model}
-lm.herg <-  lme4::glmer(Join_Count ~ height + cover + sp_richness + herb+vine+gram+shrub + (1|location), family = poisson(link  = log), data = herg.vars)
 
-plot(lm.herg)
-lm.herg
-
-summary(lm.herg)
-qqnorm(resid(lm.herg))
+lm.herg <-  lme4::glmer(Join_Count ~ 
+                          height + 
+                          cover + 
+                          sp_richness + 
+                          herb +
+                          vine +
+                          gram +
+                          shrub +
+                           (1|location), 
+                         family = poisson(link  = log), 
+                         data = herg.vars)
+  plot(lm.herg)
+  summary(lm.herg)
+  qqnorm(resid(lm.herg))
+  
+lm.herg1 <-  lme4::glmer(Join_Count ~ 
+                          height_class + 
+                          cover_class + 
+                          sp_richness + 
+                          herb +
+                          vine +
+                          gram +
+                          shrub +
+                           (1|location), 
+                         family = poisson(link  = log), 
+                         data = herg.vars)
+  plot(lm.herg1)
+  summary(lm.herg1)
+  qqnorm(resid(lm.herg1))
+  
+lm.herg2 <-  lme4::glmer(Join_Count ~ 
+                           herb +
+                           vine +
+                           gram +
+                           shrub +
+                           sp_richness + 
+                           (1|location), 
+                         family = poisson(link  = log), 
+                         data = herg.vars)
+  plot(lm.herg2)
+  summary(lm.herg2)
+  qqnorm(resid(lm.herg2))
+  
+lm.herg3 <-  lme4::glmer(Join_Count ~ 
+                           cover_class +
+                           height_class +
+                           sp_richness + 
+                           (1|location), 
+                         family = poisson(link  = log), 
+                         data = herg.vars)
+  plot(lm.herg3)
+  summary(lm.herg3)
+  qqnorm(resid(lm.herg3))
+  
+lm.herg4 <-  lme4::glmer(Join_Count ~ 
+                          height + 
+                          cover + 
+                          sp_richness + 
+                          herb +
+                          vine +
+                          gram +
+                          shrub +
+                           Z +
+                           (1|location), 
+                         family = poisson(link  = log), 
+                         data = herg.vars)
+  plot(lm.herg4)
+  summary(lm.herg4)
+  qqnorm(resid(lm.herg4))  
 
 ```
 
@@ -82,6 +145,9 @@ summary(lmtmb.bird)
 ```{r lm veg}
 lm.sp_richness <- glmer(sp_richness ~ Join_Count + height + (1|location), family = poisson(link = log),data = coei.vars)
 summary(lm.sp_richness)
+
+lm.sp_richness1 <- glmer(sp_richness ~ Join_Count + Z + height + (1|location), family = poisson(link = log),data = bird.vars)
+summary(lm.sp_richness1)
 ```
 
 ```{r}
