@@ -1,0 +1,34 @@
+---
+title: "visualizations"
+author: "Finley O'Connor"
+date: "2024-04-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##create veg color palettes
+```{r assign-colors-to-percent-cover}
+cover_color <- c("0-0.01" = "#dadaeb", 
+                 "0.06-0.25" = "#bcbddc", 
+                 "0.26-0.50" = "#9e9ac8", 
+                 "0.51-0.75" = "#756bb1", 
+                 "0.76-1.00" = "#54278f") 
+```
+-
+```{r assign-colors-to-percent-cover-for-leaflet}
+cover_color_leaf <- colorFactor(palette = c("#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"), 
+                           domain = c("0-0.01", "0.06-0.25", "0.26-0.50", "0.51-0.75", "0.76-1.00"),
+                           ordered = TRUE)
+```
+-
+```{r assign-colors-to-height-classes}
+height_color <- c("0-0.15" = "#ffffb2", 
+                  "0.15-0.30" = "#fecc5c", 
+                  "0.30-1" = "#fd8d3c", 
+                  "1-1.5" = "#f03b20", 
+                  "1.5+" = "#bd0026")
+```
+

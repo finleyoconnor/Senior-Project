@@ -1,0 +1,90 @@
+---
+title: "lms"
+author: "Finley O'Connor"
+date: "2024-04-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#glm for each island
+```{r}
+glm.shab <- glm(Join_Count ~ species + height + cover + sp_richness + herb + vine + gram + shrub, family = poisson(link = log), data = shab.vars)
+summary(glm.shab)
+qqnorm(resid(glm.shab))
+```
+
+#separate mixed effects models for all bird species
+```{r herg model}
+lm.herg <-  lme4::glmer(Join_Count ~ height + cover + sp_richness + herb+vine+gram+shrub + (1|location), family = poisson(link  = log), data = herg.vars)
+
+plot(lm.herg)
+lm.herg
+
+summary(lm.herg)
+qqnorm(resid(lm.herg))
+
+```
+
+```{r coei model}
+lm.coei <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = coei.vars)
+
+
+
+lm.coei
+plot(lm.coei)
+
+summary(lm.coei)
+qqnorm(resid(lm.coei))
+```
+
+```{r r2 coei}
+R2_coei <- partR2(lm.coei, partvars = c("height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+                  R2_type = "marginal", nboot = 10)
+R2_coei.c <- partR2(lm.coei, 
+                  R2_type = "conditional", nboot = 10)
+```
+
+```{r gbbg model}
+lm.gbbg <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = gbbg.vars)
+
+summary(lm.gbbg)
+qqnorm(resid(lm.gbbg))
+```
+
+```{r aggregate gull model}
+gull.vars.2 <- gull.vars %>% filter(!(is.na(cover)))
+lm.gull <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = gull.vars.2)
+
+summary(lm.gull)
+qqnorm(resid(lm.gull))
+```
+
+```{r r2 gull}
+
+R2_gull <- partR2(lm.gull, partvars = c("height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+                  R2_type = "marginal", nboot = 5)
+```
+
+#models for aggregate birds
+```{r}
+lm.bird <- glmer(Join_Count ~ sp_richness + (1|POINT_X) + (1|POINT_Y), family = poisson(link = log), data = bird.vars)
+```
+
+```{r}
+lmtmb.bird <- glmmTMB(Join_Count ~ species + sp_richness + cover + (1|location), data = bird.vars, family = compois(link = "log"), ziformula = ~., )
+summary(lmtmb.bird)
+```
+
+#veg models
+```{r lm veg}
+lm.sp_richness <- glmer(sp_richness ~ Join_Count + height + (1|location), family = poisson(link = log),data = coei.vars)
+summary(lm.sp_richness)
+```
+
+```{r}
+
+```
+

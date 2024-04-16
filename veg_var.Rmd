@@ -26,21 +26,21 @@ This is counting how many species each PLOT has - this does not account for the 
 
 This is separating the data file into separate data frames by island?
 ```{r}
-# # Heron
-# heron_veg_all <- island_veg_all %>% 
-#   filter(location == "heron")
-# 
-# # Schoodic
-# schoodic_veg_all <- island_veg_all %>% 
-#   filter(location == "schoodic")
-# 
-# # shabby
-# shabby_veg_all <- island_veg_all %>% 
-#   filter(location == "shabby")
-# 
+# Heron
+heron_veg_all <- island_veg_all %>% 
+  filter(location == "heron")
+ 
+ # Schoodic
+ schoodic_veg_all <- island_veg_all %>% 
+  filter(location == "schoodic")
+
+# shabby
+shabby_veg_all <- island_veg_all %>% 
+  filter(location == "shabby")
+
 # # gdi
-# gdi_veg_all <- island_veg_all %>% 
-#   filter(location == "gdi")
+gdi_veg_all <- island_veg_all %>% 
+  filter(location == "gdi")
 ```
 
 This is counting how many species each ISLAND has - this does not account for the `NA`s within the dataset, which will need to be addressed later.

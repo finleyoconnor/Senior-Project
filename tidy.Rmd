@@ -27,14 +27,10 @@ library(readxl) ##working with xcel sheets
 library(ggridges)
 library(dataCompareR)
 
-install.packages("partR2")
-
 library(lme4)
 library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
-install.packages("TMB")
 library(TMB)
-install.packages("glmmTMB")
 library(glmmTMB)
 ```
 
@@ -44,11 +40,11 @@ veg_attributes <- read_csv("gitdata/plotpointsattributes.csv")
 gdi_attributes <- read_csv("gitdata/gdipointsattributes.csv")
 
 ```
+
 ```{r fix-gdi-attributes}
 gdi_attributes <- gdi_attributes %>%
   mutate(name = paste0('gdi',gdi_attributes$OID_))
 ```
-
 
 ```{r join-gdi}
 veg_attributes <- full_join(veg_attributes, gdi_attributes)
@@ -77,11 +73,13 @@ mutate(height_class = case_when(TRUE ~ as.factor(height))) #making height class 
 
 ```{r create-veg-types}
 island_veg_all$type <- "NA"
+island_veg_all$arm<- "NA"
 ```
 
 ```{r}
 spp_list <- unique(island_veg_all$spp)
 spp_list <- as.data.frame(spp_list)
+  colnames(spp_list) <- "spp"
 ```
 
 ```{r assign-veg-types}
@@ -163,10 +161,103 @@ island_veg_all <- island_veg_all %>%
       spp == "Rumex longifolius" ~ "herb",
       TRUE ~ type
       ))
+
+island_veg_all <- island_veg_all %>%
+    mutate(arm = case_when(
+      spp == "Valeriana officionalis" ~ "0",
+      spp == "Taraxacum officionale" ~ "0",
+      spp == "Urtica dioica" ~ "1",
+      spp == "Fragaria virginiana" ~ "0",
+      spp == "Cerastium arvense" ~ "0",
+      spp == "Veronica arvensis"~ "0",
+      spp == "Solidago puberula"~ "0",
+      spp == "Solanum dulcamara"~ "0",
+      spp == "Cirsium vulgare"~ "1",
+      spp == "Calystegia sepium"~ "0",
+      spp == "Poa trivialis"~ "0",
+      spp == "Trifolium repens"~ "0",
+      spp == "Ranunculus acris"~ "0",
+      spp == "Poa pratensis"~ "0",
+      spp == "Lathyrus palustris"~ "0",
+      spp == "Rubus idaeus"~ "1",
+      spp == "Alepecurus pratensis"~ "0",
+      spp == "Solidago sempervirens"~ "0",
+      spp == "Galium sylvaticum"~ "0",
+      spp == "Plantago major"~ "0",
+      spp == "Poa spp (tufting)"~ "0",
+      spp == "Lathyrus japonicus"~ "0",
+      spp == "Iris versicolor" ~ "0",
+      spp == "Scutellaria galericulata"~ "0",
+      spp == "Potentilla anserina"~ "1",
+      spp == "Elymus repens"~ "0",
+      spp == "Achillea millefolium"~ "0",
+      spp == "Maianthemum canadense"~ "0",
+      spp == "Carex silicea"~ "0",
+      spp == "Rumex pallidus"~ "0",
+      spp == "Arctium sp."~ "0",
+      spp == "Cirsium sp."~ "1",
+      spp == "young yarrow? #56"~ "0",
+      spp == "Mentha canadensis"~ "0",
+      spp == "Epilobium ciliatum"~ "0",
+      spp == "Atriplex subspicata"~ "0",
+      spp == "Capsella bursa-pastoris"~ "0",
+      spp == "Matricaria discoidea"~ "0",
+      spp == "Festuca rubra"~ "0",
+      spp == "Doellingeria umbellata"~ "0",
+      spp == "Rubus hispidus"~ "1",
+      spp == "Agrostis stolonifera"~ "0",
+      spp == "Hieracium caespitosum"~ "0",
+      spp == "Rumex acetosella"~ "0",
+      spp == "Rumex britannica"~ "0",
+      spp == "Solidago rugosa"~ "0",
+      spp == "Cuscuta gronovii"~ "0",
+      spp == "Impatiens capensis"~ "0",
+      spp == "Angelica lucida"~ "0",
+      spp == "Cornus canadensis" ~ "0",
+      spp == "Moehringia lateriflora" ~ "0",
+      spp == "Carex nigra" ~ "0",
+      spp == "Vaccinium angustifolium" ~ "0",
+      spp == "Luzula multiflora" ~ "0",
+      spp == "Anthoxanthum odoratum" ~ "0",
+      spp == "Stellaria media" ~ "0",
+      spp == "Myrica gale" ~ "0",
+      spp == "Rumex crispus" ~ "0",
+      spp == "Plantago maritima" ~ "0",
+      spp == "Cirsium arvense" ~ "1",
+      spp == "Galeopsis bifida" ~ "0",
+      spp == "Elymus trachycaulus" ~ "0",
+      spp == "Ribes glandulosum" ~ "0",
+      spp == "Osmundastrum cinnamomeum" ~ "0",
+      spp == "Rumex sp." ~ "0",
+      spp == "Raphanus raphanistrum" ~ "0",
+      spp == "Spiraea alba" ~ "0",
+      spp == "Symphyotrichum novae-angliae" ~ "0",
+      spp == "Lycopus uniflorus" ~ "0",
+      spp == "Agrostis scabra" ~ "0",
+      spp == "Cerastium fontanum" ~ "0",
+      spp == "Potentilla simplex" ~ "0",
+      spp == "Potentilla norvegica" ~ "0",
+      spp == "Rumex longifolius" ~ "0",
+      TRUE ~ arm
+      )) %>%
+  mutate(arm = as.numeric(arm))
+```
+
+```{r}
+spp_list <- island_veg_all %>% select(spp, type, arm)
+spp_list <- distinct(spp_list)
+
+```
+
+```{r}
+spp_list %>% 
+  group_by(type)
+  
+write.table(spp_list, file = "spp_list.csv")
 ```
 
 
-```{r species-richness-variable-model}
+```{r}
 rich.notna <- island_veg_all %>%
   filter(!(is.na(spp))) %>%
   group_by(gps) %>%
@@ -178,7 +269,7 @@ rich.na <- island_veg_all %>%
   mutate(sp_richness = 0) #sp richness count for NAs
 
 filtered <- island_veg_all %>%
-  select(location,gps,date,cover,height, POINT_X, POINT_Y)
+  select(location,gps,date,cover,height,arm, POINT_X, POINT_Y)
 
 model.vars <- rbind(rich.notna,rich.na) %>%
   select(1:2) %>%
@@ -186,7 +277,7 @@ model.vars <- rbind(rich.notna,rich.na) %>%
   distinct(gps, .keep_all = TRUE)
 ```
 
-```{r structure-varible-for-model}
+```{r}
 structure <- island_veg_all %>%
   select(gps, type) %>%
   mutate(presence = "1") %>%
@@ -210,7 +301,8 @@ structure <- structure %>%
 # structure <- test %>%
 #   select(gps, herb, vine, gram, shrub)
 
- model.vars <- left_join(model.vars, structure, by = "gps")
+ model.vars <- left_join(model.vars, structure, by = "gps") 
+ 
 
 ``` 
 
@@ -272,31 +364,15 @@ coei.vars <- model.vars %>%
 gbbg.vars <- model.vars %>%
   left_join(gbbg_buff, by = "gps")
 
+#combine gull data
+gull.vars <- bind_rows(herg.vars, gbbg.vars)
+
 #all species model.var dataframe
 bird.vars <- bind_rows(herg.vars, coei.vars, gbbg.vars)
+
+#by island
+shab.vars <- filter(bird.vars, location == "shabby")
+hrn.vars <- filter(bird.vars, location == "heron")
+sch.vars <- filter(bird.vars, location == "schoodic")
+gdi.vars <- filter(bird.vars, location == "gdi")
 ```
-
-
-#separate mixed effects model for all bird species
-```{r mixed effects model}
-lm.herg <-  lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson(link  = log), data = herg.vars)
-
-plot(lm.herg)
-lm.herg
-
-```
-
-```{r}
-lm.coei <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = coei.vars)
-
-lm.coei
-plot(lm.coei)
-```
-```{r}
-lm.bird <- glmer(Join_Count ~ species + sp_richness + (1|POINT_X) + (1|POINT_Y), family = poisson(link = log), data = bird.vars)
-```
-
-```{r}
-lmtmb.bird <- glmmTMB(Join_Count ~ species + (1|location), data = bird.vars, family = compois(link = log), ziformula = ~., )
-```
-
