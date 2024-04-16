@@ -133,7 +133,9 @@ R2_gull <- partR2(lm.gull, partvars = c("height", "cover", "sp_richness", "herb"
 
 #models for aggregate birds
 ```{r}
-lm.bird <- glmer(Join_Count ~ sp_richness + (1|POINT_X) + (1|POINT_Y), family = poisson(link = log), data = bird.vars)
+lm.bird <- glmer(Join_Count ~ Z + sp_richness + (1|location), family = poisson(link = log), data = bird.vars)
+
+summary(lm.bird)
 ```
 
 ```{r}
