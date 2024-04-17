@@ -84,7 +84,8 @@ spp_list <- as.data.frame(spp_list)
   colnames(spp_list) <- "spp"
 ```
 
-```{r assign-veg-types}
+#mutate island_veg_all
+```{r add type, arm, genus}
 island_veg_all <- island_veg_all %>%
     mutate(type = case_when(
       spp == "Valeriana officionalis" ~ "herb",
@@ -325,6 +326,17 @@ island_veg_all <- island_veg_all %>%
       ))
 ```
 
+```{r add month}
+island_veg_all <- island_veg_all %>%
+    mutate(month = case_when(
+      date == "5/27/2023" ~ "5",
+      date == "5/31/2023" ~ "5",
+      date == "7/12/2023" ~ "7",
+      date == "8/12/2023" ~ "8"
+    ))
+```
+
+#spp_list
 ```{r}
 spp_list <- island_veg_all %>% select(spp, type, arm)
 spp_list <- distinct(spp_list)
@@ -338,7 +350,7 @@ spp_list %>%
 write.table(spp_list, file = "spp_list.csv")
 ```
 
-
+#species richness
 ```{r}
 rich.notna <- island_veg_all %>%
   filter(!(is.na(spp))) %>%
@@ -351,7 +363,7 @@ rich.na <- island_veg_all %>%
   mutate(sp_richness = 0) #sp richness count for NAs
 
 filtered <- island_veg_all %>%
-  select(location,gps,date, cover, cover_class, height, height_class, POINT_X, POINT_Y, Z, arm)
+  select(location,gps,date, month, cover, cover_class, height, height_class, POINT_X, POINT_Y, Z, arm)
 
 model.vars <- rbind(rich.notna,rich.na) %>%
   select(1:2) %>%
@@ -359,7 +371,7 @@ model.vars <- rbind(rich.notna,rich.na) %>%
   distinct(gps, .keep_all = TRUE)
 ```
 
-```{r}
+```{r make structure + model.vars}
 structure <- island_veg_all %>%
   select(gps, type) %>%
   mutate(presence = "1") %>%
@@ -454,7 +466,19 @@ bird.vars <- bind_rows(herg.vars, coei.vars, gbbg.vars)
 
 #by island
 shab.vars <- filter(bird.vars, location == "shabby")
+  shab.herg <- filter(herg.vars, location == "shabby")
+  shab.gbbg <- filter(gbbg.vars, location == "shabby")
+  shab.coei <- filter(coei.vars, location == "shabby")
 hrn.vars <- filter(bird.vars, location == "heron")
+  hrn.herg <- filter(herg.vars, location == "heron")
+  hrn.gbbg <- filter(gbbg.vars, location == "heron")
+  hrn.coei <- filter(coei.vars, location == "heron")
 sch.vars <- filter(bird.vars, location == "schoodic")
+  sch.herg <- filter(herg.vars, location == "schoodic")
+  sch.gbbg <- filter(gbbg.vars, location == "schoodic")
+  sch.coei <- filter(coei.vars, location == "schoodic")
 gdi.vars <- filter(bird.vars, location == "gdi")
+  gdi.herg <- filter(herg.vars, location == "gdi")
+  gdi.gbbg <- filter(gbbg.vars, location == "gdi")
+  gdi.coei <- filter(coei.vars, location == "gdi")
 ```
