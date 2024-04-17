@@ -9,13 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#glm for each island
-```{r}
-glm.shab <- glm(Join_Count ~ species + height_class + cover_class + sp_richness + herb + vine + gram + shrub, family = poisson(link = log), data = shab.vars)
-summary(glm.shab)
-qqnorm(resid(glm.shab))
-```
-
 #separate mixed effects models for all bird species
 ```{r herg model}
 
@@ -139,8 +132,12 @@ summary(lm.bird)
 ```
 
 ```{r}
-lmtmb.bird <- glmmTMB(Join_Count ~ species + sp_richness + cover + (1|location), data = bird.vars, family = compois(link = "log"), ziformula = ~., )
+lmtmb.bird <- glmmTMB(Join_Count ~ species + sp_richness + height + cover + (1|month), data = bird.vars, family = tweedie(link = "log"), ziformula = ~., )
 summary(lmtmb.bird)
+
+lmtmb.herg <- glmmTMB(Join_Count ~ Z + sp_richness + height + cover + shrub + gram + herb + vine + (1|location) + (1|month), data = herg.vars, family = tweedie(link = "log"), ziformula = ~., )
+summary(lmtmb.herg)
+
 ```
 
 #veg models
@@ -155,4 +152,224 @@ summary(lm.sp_richness1)
 ```{r}
 
 ```
+
+#glm for each island
+```{r shabby}
+glm.shab <- glm(Join_Count ~ 
+                  height_class + 
+                  cover_class + 
+                  sp_richness + 
+                  herb + 
+                  vine + 
+                  gram + 
+                  shrub, 
+                family = poisson(link = log), 
+                data = shab.vars)
+summary(glm.shab)
+qqnorm(resid(glm.shab))
+
+glm.shab.herg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = shab.herg)
+summary(glm.shab.herg)
+
+glm.shab.gbbg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = shab.gbbg)
+summary(glm.shab.gbbg)
+
+glm.shab.coei <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = shab.coei)
+summary(glm.shab.coei)  ##YIKEY
+```
+```{r heron} 
+## YIKES TO ALL OF THESE OI VEY
+glm.hrn <- glm(Join_Count ~ 
+                  Z +
+                  height_class + 
+                  cover_class + 
+                  sp_richness + 
+                  herb + 
+                  vine + 
+                  gram + 
+                  shrub, 
+                family = poisson(link = log), 
+                data = hrn.vars)
+summary(glm.hrn)
+qqnorm(resid(glm.hrn))
+
+glm.hrn.herg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = hrn.herg)
+summary(glm.hrn.herg)
+
+glm.hrn.gbbg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = hrn.gbbg)
+summary(glm.hrn.gbbg)
+
+glm.hrn.coei <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = hrn.coei)
+summary(glm.hrn.coei)
+```
+
+```{r schoodic}
+#well crap. how do I test whether my findings are true across the islands??
+glm.sch <- glm(Join_Count ~ 
+                  height_class + 
+                  cover_class + 
+                  sp_richness + 
+                  herb + 
+                  vine + 
+                  gram + 
+                  shrub, 
+                family = poisson(link = log), 
+                data = sch.vars)
+summary(glm.sch)
+qqnorm(resid(glm.sch))
+
+glm.sch.herg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = sch.herg)
+summary(glm.sch.herg)
+
+glm.sch.gbbg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = sch.gbbg)
+summary(glm.sch.gbbg)
+
+glm.sch.coei <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = sch.coei)
+summary(glm.sch.coei)
+```
+```{r gdi}
+glm.gdi <- glm(Join_Count ~ 
+                  species +
+                  height + 
+                  cover + 
+                  sp_richness + 
+                  herb + 
+                  vine + 
+                  gram + 
+                  shrub, 
+                family = poisson(link = log), 
+                data = gdi.vars)
+summary(glm.gdi)
+qqnorm(resid(glm.gdi))
+
+glm.gdi.herg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = shab.herg)
+summary(glm.gdi.herg)
+
+glm.gdi.gbbg <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = gdi.gbbg)
+summary(glm.gdi.gbbg)
+
+glm.gdi.coei <- glm(Join_Count ~ 
+                       Z +
+                       height + 
+                       cover +
+                       sp_richness +
+                       herb + 
+                       vine +
+                       gram + 
+                       shrub, 
+                     family = poisson(link = log), 
+                     data = gdi.coei)
+summary(glm.gdi.coei)
+```
+
 
