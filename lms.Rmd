@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #separate mixed effects models for all bird species
 ```{r herg model}
-
+herg.vars.2 <- herg.vars %>% filter(!(is.na(cover)))
 lm.herg <-  lme4::glmer(Join_Count ~ 
                           height + 
                           cover + 
@@ -22,7 +22,7 @@ lm.herg <-  lme4::glmer(Join_Count ~
                           shrub +
                            (1|location), 
                          family = poisson(link  = log), 
-                         data = herg.vars)
+                         data = herg.vars.2)
   plot(lm.herg)
   summary(lm.herg)
   qqnorm(resid(lm.herg))
@@ -40,7 +40,7 @@ lm.herg1 <-  lme4::glmer(Join_Count ~
                          data = herg.vars)
   plot(lm.herg1)
   summary(lm.herg1)
-  qqnorm(resid(lm.herg1))
+  qqnorm(resid(lm.herg1)) #still not totally sure which I should be using, but the ordinal variables add a lot of extra partitioning of variance and i *think* that since the numbers increase as the observed measure (numerical) increases, it should be okay.
   
 lm.herg2 <-  lme4::glmer(Join_Count ~ 
                            herb +
@@ -56,8 +56,8 @@ lm.herg2 <-  lme4::glmer(Join_Count ~
   qqnorm(resid(lm.herg2))
   
 lm.herg3 <-  lme4::glmer(Join_Count ~ 
-                           cover_class +
-                           height_class +
+                           cover +
+                           height +
                            sp_richness + 
                            (1|location), 
                          family = poisson(link  = log), 
@@ -66,7 +66,8 @@ lm.herg3 <-  lme4::glmer(Join_Count ~
   summary(lm.herg3)
   qqnorm(resid(lm.herg3))
   
-lm.herg4 <-  lme4::glmer(Join_Count ~ 
+#THIS ONE
+  lm.herg4 <-  lme4::glmer(Join_Count ~ 
                           height + 
                           cover + 
                           sp_richness + 
@@ -77,16 +78,30 @@ lm.herg4 <-  lme4::glmer(Join_Count ~
                            Z +
                            (1|location), 
                          family = poisson(link  = log), 
-                         data = herg.vars)
+                         data = herg.vars.2)
   plot(lm.herg4)
   summary(lm.herg4)
   qqnorm(resid(lm.herg4))  
 
 ```
 
-```{r coei model}
-lm.coei <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = coei.vars)
+```{r lm.herg r2}
+R2_herg <- partR2(lm.herg4, partvars = c("height", "cover", "sp_richness", "herb", "vine", "gram", "shrub", "Z"), 
+                  R2_type = "marginal", nboot = 10)
+R2_herg.c <- partR2(lm.herg4, 
+                  R2_type = "conditional", nboot = 10)
+#error: "Error in `[<-.data.frame`(`*tmp*`, , rcol, value = c(0L, 0L, 2L, 0L, 0L,  : replacement has 80 rows, data has 81"
+#SOLUTION: Cover column has one NA entry. Filter out NA and run model again, r^2 should function.
+```
+```{r}
+summary(R2_herg)
+summary(R2_herg.c)
+```
 
+
+```{r coei model}
+is.na(coei.vars)
+lm.coei <- lme4::glmer(Join_Count ~ Z + height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = coei.vars)
 
 
 lm.coei
@@ -96,19 +111,32 @@ summary(lm.coei)
 qqnorm(resid(lm.coei))
 ```
 
-```{r r2 coei}
-R2_coei <- partR2(lm.coei, partvars = c("height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
-                  R2_type = "marginal", nboot = 10)
+```{r lm.coei r2}
+R2_coei <- partR2(lm.coei, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+                  R2_type = "marginal", nboot = 5)
 R2_coei.c <- partR2(lm.coei, 
                   R2_type = "conditional", nboot = 10)
 ```
 
 ```{r gbbg model}
-lm.gbbg <- lme4::glmer(Join_Count ~ height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = gbbg.vars)
+lm.gbbg <- lme4::glmer(Join_Count ~ Z + height + cover + sp_richness + herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = gbbg.vars)
 
 summary(lm.gbbg)
 qqnorm(resid(lm.gbbg))
 ```
+
+```{r lm.gbbg r2}
+R2_gbbg <- partR2(lm.gbbg, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+                  R2_type = "marginal", nboot = 5)
+R2_gbbg.c <- partR2(lm.gbbg, 
+                  R2_type = "conditional", nboot = 10)
+```
+
+```{r}
+summary(R2_gbbg)
+summary(R2_gbbg.c)
+```
+
 
 ```{r aggregate gull model}
 gull.vars.2 <- gull.vars %>% filter(!(is.na(cover)))
@@ -122,14 +150,25 @@ qqnorm(resid(lm.gull))
 
 R2_gull <- partR2(lm.gull, partvars = c("height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
                   R2_type = "marginal", nboot = 5)
+
+R2_gull.c <- partR2(lm.gull, 
+                  R2_type = "conditional", nboot = 10)
+summary(R2_gull)
+summary(R2_gull.c)
 ```
 
 #models for aggregate birds
-```{r}
+```{r lm.bird}
 lm.bird <- glmer(Join_Count ~ Z + sp_richness + (1|location), family = poisson(link = log), data = bird.vars)
 
 summary(lm.bird)
 ```
+
+```{r lm.bird r2}
+R2_bird <- partR2(lm.bird, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+                  R2_type = "marginal", nboot = 5)
+```
+
 
 ```{r}
 lmtmb.bird <- glmmTMB(Join_Count ~ species + sp_richness + height + cover + (1|month), data = bird.vars, family = tweedie(link = "log"), ziformula = ~., )
