@@ -33,7 +33,7 @@ library(partR2) #derive r2 values from GLM
 library(TMB)
 library(glmmTMB)
 library(car)
-#library(statmod)
+library(statmod)
 ```
 
 ```{r read-in-vegetation-file, echo = FALSE}
