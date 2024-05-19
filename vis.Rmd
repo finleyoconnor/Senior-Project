@@ -36,9 +36,9 @@ height_color <- c("0-0.15" = "#ffffb2",
 #veg frequency: SHABBY
 island_veg_all %>%
   filter(location == "shabby") %>%
-  ggplot(mapping = aes(y = spp)
+  ggplot(mapping = aes(y = fct_infreq(spp))
     ) +
-  geom_bar(fill = "#21918c") +
+  geom_bar(fill = "darkgoldenrod2") +
   theme(axis.text.y = element_text(vjust = 10)) +
   theme_minimal() + 
   labs(title = "Species Frequency (Shabby Island)",
@@ -48,9 +48,9 @@ island_veg_all %>%
 #veg frequency: GDI
 island_veg_all %>%
   filter(location == "gdi") %>%
-  ggplot(mapping = aes(y = spp)
+  ggplot(mapping = aes(y = fct_infreq(spp))
     ) +
-  geom_bar(fill = "#21918c") +
+  geom_bar(fill = "darkslategray3") +
   theme(axis.text.y = element_text(vjust = 10)) +
   theme_minimal() + 
   labs(title = "Species Frequency (Great Duck Island)",
@@ -60,9 +60,9 @@ island_veg_all %>%
 #veg frequency: SCHOODIC
 island_veg_all %>%
   filter(location == "schoodic") %>% 
-  ggplot(mapping = aes(y = spp)
+  ggplot(mapping = aes(y = fct_infreq(spp))
     ) +
-  geom_bar(fill = "#21918c") +
+  geom_bar(fill = "darkgreen") +
   theme(axis.text.y = element_text(vjust = 10)) +
   theme_minimal() + 
   labs(title = "Species Frequency (Schoodic Island)",
@@ -72,7 +72,7 @@ island_veg_all %>%
 #veg frequency: HERON
 island_veg_all %>%
   filter(location == "heron") %>% 
-  ggplot(mapping = aes(y = spp)
+  ggplot(mapping = aes(y = fct_infreq(spp))
     ) +
   geom_bar(fill = "#21918c") +
   theme(axis.text.y = element_text(vjust = 10)) +
@@ -86,9 +86,9 @@ island_veg_all %>%
 ```{r genus freq}
 island_veg_all %>%
   filter(location == "heron") %>% 
-  ggplot(mapping = aes(y = genus)
+  ggplot(mapping = aes(y = fct_infreq(genus))
     ) +
-  geom_bar(fill = "#21918c") +
+  geom_bar(fill = "darkgoldenrod2") +
   theme(axis.text.y = element_text(vjust = 10)) +
   theme_minimal() + 
   labs(title = "Genus Frequency (Heron Island)",
@@ -97,9 +97,9 @@ island_veg_all %>%
 
 island_veg_all %>%
   filter(location == "schoodic") %>% 
-  ggplot(mapping = aes(y = genus)
+  ggplot(mapping = aes(y = fct_infreq(genus))
     ) +
-  geom_bar(fill = "#21918c") +
+  geom_bar(fill = "darkgreen") +
   theme(axis.text.y = element_text(vjust = 10)) +
   theme_minimal() + 
   labs(title = "Genus Frequency (Schoodic Island)",
@@ -108,9 +108,9 @@ island_veg_all %>%
 
 island_veg_all %>%
   filter(location == "gdi") %>% 
-  ggplot(mapping = aes(y = genus)
+  ggplot(mapping = aes(y = fct_infreq(genus))
     ) +
-  geom_bar(fill = "#21918c") +
+  geom_bar(fill = "darkslategray3") +
   theme(axis.text.y = element_text(vjust = 10)) +
   theme_minimal() + 
   labs(title = "Genus Frequency (Great Duck Island)",
@@ -119,7 +119,7 @@ island_veg_all %>%
 
 island_veg_all %>%
   filter(location == "shabby") %>% 
-  ggplot(mapping = aes(y = genus)
+  ggplot(mapping = aes(y = fct_infreq(genus))
     ) +
   geom_bar(fill = "#21918c") +
   theme(axis.text.y = element_text(vjust = 10)) +

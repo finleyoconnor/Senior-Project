@@ -28,10 +28,12 @@ library(ggridges)
 library(dataCompareR)
 
 library(lme4)
-library(afex) #pulls p-values from GLM
+#library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
 library(TMB)
 library(glmmTMB)
+library(car)
+#library(statmod)
 ```
 
 ```{r read-in-vegetation-file, echo = FALSE}
@@ -336,6 +338,8 @@ island_veg_all <- island_veg_all %>%
     ))
 ```
 
+
+
 #spp_list
 ```{r}
 spp_list <- island_veg_all %>% select(spp, type, arm)
@@ -400,7 +404,7 @@ structure <- structure %>%
 
 ``` 
 
-
+#bird data
 ```{r read in non-GDI bird counts}
 # herg_count <- read_excel("gitdata/herg_buff_count_TableToExcel.xlsx")
 # coei_count <- read_excel("gitdata/coei_buff_count_TableToExcel.xlsx")
@@ -432,7 +436,7 @@ gdi_gbbg_count <- gdi_gbbg_count %>%
   mutate(gps = paste0('gdi',gdi_gbbg_count$OBJECTID))
 ```
 
-```{r tidy and join bird count dataframes }
+```{r tidy and join bird dataframes (make _buffs & .vars) }
 
 #combine GDI and all other islands
 herg_buff <- bind_rows(gdi_herg_count, herg_count)
@@ -481,4 +485,32 @@ gdi.vars <- filter(bird.vars, location == "gdi")
   gdi.herg <- filter(herg.vars, location == "gdi")
   gdi.gbbg <- filter(gbbg.vars, location == "gdi")
   gdi.coei <- filter(coei.vars, location == "gdi")
+  
 ```
+
+```{r}
+bird.vars.2 <- bird.vars %>% filter(!(is.na(cover)))
+bird.vars.2 <- bird.vars.2[is.na(bird.vars.2)] <- "0"
+```
+
+```{r veg.vars}
+n_herg <- herg_buff %>%
+  select(!"species") %>%
+  rename("herg_count" = "Join_Count")
+
+n_gbbg <- gbbg_buff %>%
+  select(!"species") %>%
+  rename("gbbg_count" = "Join_Count")
+
+n_coei <- coei_buff %>%
+  select(!"species") %>%
+  rename("coei_count" = "Join_Count")
+
+veg.vars.herg <- left_join(island_veg_all, herg_buff, by = "gps") 
+veg.vars.gbbg <- left_join(island_veg_all, gbbg_buff, by = "gps")
+veg.vars.coei <- left_join(island_veg_all, coei_buff, by = "gps")
+
+# veg.vars <- left_join(island_veg_all, ) %>%
+#   left_
+```
+

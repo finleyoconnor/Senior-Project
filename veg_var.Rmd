@@ -9,6 +9,9 @@ output: html_document
 # island_veg_all <- read_csv("island_veg_all.csv")
 ```
 
+```{r}
+library(forcats)
+```
 
 #Tidying?
 This is counting how many species each PLOT has - this does not account for the `NA`s within the dataset, which will need to be addressed later. 
@@ -119,6 +122,7 @@ fisher.test(table(coei.vars$Join_Count, coei.vars$vine))
 
 chisq.test(table(coei.vars$Join_Count, coei.vars$vine))
 ```
+
 ```{r coei-shrub}
 #herb
 fisher.test(table(coei.vars$Join_Count, coei.vars$herb))
