@@ -391,10 +391,10 @@ structure <- island_veg_all %>%
   select(gps, herb, vine, gram, shrub)
 
 structure <- structure %>% 
-  mutate(herb = as.numeric(herb)) %>%
-  mutate(vine = as.numeric(vine)) %>%
-  mutate(shrub = as.numeric(shrub)) %>%
-  mutate(gram = as.numeric(gram))
+  mutate(herb = as.factor(herb)) %>%
+  mutate(vine = as.factor(vine)) %>%
+  mutate(shrub = as.factor(shrub)) %>%
+  mutate(gram = as.factor(gram))
 
 # structure <- test %>%
 #   select(gps, herb, vine, gram, shrub)

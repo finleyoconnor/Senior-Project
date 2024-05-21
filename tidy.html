@@ -741,10 +741,10 @@ model.vars &lt;- rbind(rich.notna,rich.na) %&gt;%
 ##     dplyr::summarise(n = dplyr::n(), .groups = &quot;drop&quot;) %&gt;%
 ##     dplyr::filter(n &gt; 1L)</code></pre>
 <pre class="r"><code>structure &lt;- structure %&gt;% 
-  mutate(herb = as.numeric(herb)) %&gt;%
-  mutate(vine = as.numeric(vine)) %&gt;%
-  mutate(shrub = as.numeric(shrub)) %&gt;%
-  mutate(gram = as.numeric(gram))
+  mutate(herb = as.factor(herb)) %&gt;%
+  mutate(vine = as.factor(vine)) %&gt;%
+  mutate(shrub = as.factor(shrub)) %&gt;%
+  mutate(gram = as.factor(gram))
 
 # structure &lt;- test %&gt;%
 #   select(gps, herb, vine, gram, shrub)
