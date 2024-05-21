@@ -130,7 +130,7 @@ island_veg_all <- island_veg_all %>%
       spp == "Matricaria discoidea"~ "herb",
       spp == "Festuca rubra"~ "gram",
       spp == "Doellingeria umbellata"~ "herb",
-      spp == "Rubus hispidus"~ "shrub",
+      spp == "Rubus hispidus"~ "herb", ##coded as herb because of sub-shrubbiness
       spp == "Agrostis stolonifera"~ "gram",
       spp == "Hieracium caespitosum"~ "herb",
       spp == "Rumex acetosella"~ "herb",
@@ -142,7 +142,7 @@ island_veg_all <- island_veg_all %>%
       spp == "Cornus canadensis" ~ "herb",
       spp == "Moehringia lateriflora" ~ "herb",
       spp == "Carex nigra" ~ "gram",
-      spp == "Vaccinium angustifolium" ~ "shrub",
+      spp == "Vaccinium angustifolium" ~ "herb", ##coded as herb because of sub-shrubbiness
       spp == "Luzula multiflora" ~ "gram",
       spp == "Anthoxanthum odoratum" ~ "gram",
       spp == "Stellaria media" ~ "herb",

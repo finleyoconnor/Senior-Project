@@ -399,10 +399,8 @@ library(glmmTMB)</code></pre>
 ## Please re-install glmmTMB from source or restore original &#39;TMB&#39; package (see &#39;?reinstalling&#39; for more information)</code></pre>
 <pre class="r"><code>library(car)</code></pre>
 <pre><code>## Warning: package &#39;car&#39; was built under R version 4.2.3</code></pre>
-<pre class="r"><code>#library(statmod)</code></pre>
-<pre><code>## Warning in gzfile(file, mode): cannot open compressed file &#39;C:/Users/ronan/
-## AppData/Local/Temp/Rtmp4M8NHP\file892c336f3d77&#39;, probable reason &#39;No such file
-## or directory&#39;</code></pre>
+<pre class="r"><code>library(statmod)</code></pre>
+<pre><code>## Warning: package &#39;statmod&#39; was built under R version 4.2.3</code></pre>
 <pre><code>## Rows: 344 Columns: 10
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -479,7 +477,7 @@ spp_list &lt;- as.data.frame(spp_list)
       spp == &quot;Matricaria discoidea&quot;~ &quot;herb&quot;,
       spp == &quot;Festuca rubra&quot;~ &quot;gram&quot;,
       spp == &quot;Doellingeria umbellata&quot;~ &quot;herb&quot;,
-      spp == &quot;Rubus hispidus&quot;~ &quot;shrub&quot;,
+      spp == &quot;Rubus hispidus&quot;~ &quot;herb&quot;, ##coded as herb because of sub-shrubbiness
       spp == &quot;Agrostis stolonifera&quot;~ &quot;gram&quot;,
       spp == &quot;Hieracium caespitosum&quot;~ &quot;herb&quot;,
       spp == &quot;Rumex acetosella&quot;~ &quot;herb&quot;,
@@ -491,7 +489,7 @@ spp_list &lt;- as.data.frame(spp_list)
       spp == &quot;Cornus canadensis&quot; ~ &quot;herb&quot;,
       spp == &quot;Moehringia lateriflora&quot; ~ &quot;herb&quot;,
       spp == &quot;Carex nigra&quot; ~ &quot;gram&quot;,
-      spp == &quot;Vaccinium angustifolium&quot; ~ &quot;shrub&quot;,
+      spp == &quot;Vaccinium angustifolium&quot; ~ &quot;herb&quot;, ##coded as herb because of sub-shrubbiness
       spp == &quot;Luzula multiflora&quot; ~ &quot;gram&quot;,
       spp == &quot;Anthoxanthum odoratum&quot; ~ &quot;gram&quot;,
       spp == &quot;Stellaria media&quot; ~ &quot;herb&quot;,
