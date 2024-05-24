@@ -390,6 +390,8 @@ library(ggridges)</code></pre>
 #library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM</code></pre>
 <pre><code>## Warning: package &#39;partR2&#39; was built under R version 4.2.3</code></pre>
+<pre class="r"><code>library(rptR)</code></pre>
+<pre><code>## Warning: package &#39;rptR&#39; was built under R version 4.2.3</code></pre>
 <pre class="r"><code>library(TMB)
 library(glmmTMB)</code></pre>
 <pre><code>## Warning: package &#39;glmmTMB&#39; was built under R version 4.2.3</code></pre>
@@ -401,6 +403,8 @@ library(glmmTMB)</code></pre>
 <pre><code>## Warning: package &#39;car&#39; was built under R version 4.2.3</code></pre>
 <pre class="r"><code>library(statmod)</code></pre>
 <pre><code>## Warning: package &#39;statmod&#39; was built under R version 4.2.3</code></pre>
+<pre class="r"><code>library(AICcmodavg)</code></pre>
+<pre><code>## Warning: package &#39;AICcmodavg&#39; was built under R version 4.2.3</code></pre>
 <pre><code>## Rows: 344 Columns: 10
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -803,23 +807,24 @@ gull.vars &lt;- bind_rows(herg.vars, gbbg.vars)
 #all species model.var dataframe
 bird.vars &lt;- bind_rows(herg.vars, coei.vars, gbbg.vars)
 
-#by island
-shab.vars &lt;- filter(bird.vars, location == &quot;shabby&quot;)
-  shab.herg &lt;- filter(herg.vars, location == &quot;shabby&quot;)
-  shab.gbbg &lt;- filter(gbbg.vars, location == &quot;shabby&quot;)
-  shab.coei &lt;- filter(coei.vars, location == &quot;shabby&quot;)
-hrn.vars &lt;- filter(bird.vars, location == &quot;heron&quot;)
-  hrn.herg &lt;- filter(herg.vars, location == &quot;heron&quot;)
-  hrn.gbbg &lt;- filter(gbbg.vars, location == &quot;heron&quot;)
-  hrn.coei &lt;- filter(coei.vars, location == &quot;heron&quot;)
-sch.vars &lt;- filter(bird.vars, location == &quot;schoodic&quot;)
-  sch.herg &lt;- filter(herg.vars, location == &quot;schoodic&quot;)
-  sch.gbbg &lt;- filter(gbbg.vars, location == &quot;schoodic&quot;)
-  sch.coei &lt;- filter(coei.vars, location == &quot;schoodic&quot;)
-gdi.vars &lt;- filter(bird.vars, location == &quot;gdi&quot;)
-  gdi.herg &lt;- filter(herg.vars, location == &quot;gdi&quot;)
-  gdi.gbbg &lt;- filter(gbbg.vars, location == &quot;gdi&quot;)
-  gdi.coei &lt;- filter(coei.vars, location == &quot;gdi&quot;)</code></pre>
+# #by island
+# shab.vars &lt;- filter(bird.vars, location == &quot;shabby&quot;)
+#   shab.herg &lt;- filter(herg.vars, location == &quot;shabby&quot;)
+#   shab.gbbg &lt;- filter(gbbg.vars, location == &quot;shabby&quot;)
+#   shab.coei &lt;- filter(coei.vars, location == &quot;shabby&quot;)
+# hrn.vars &lt;- filter(bird.vars, location == &quot;heron&quot;)
+#   hrn.herg &lt;- filter(herg.vars, location == &quot;heron&quot;)
+#   hrn.gbbg &lt;- filter(gbbg.vars, location == &quot;heron&quot;)
+#   hrn.coei &lt;- filter(coei.vars, location == &quot;heron&quot;)
+# sch.vars &lt;- filter(bird.vars, location == &quot;schoodic&quot;)
+#   sch.herg &lt;- filter(herg.vars, location == &quot;schoodic&quot;)
+#   sch.gbbg &lt;- filter(gbbg.vars, location == &quot;schoodic&quot;)
+#   sch.coei &lt;- filter(coei.vars, location == &quot;schoodic&quot;)
+# gdi.vars &lt;- filter(bird.vars, location == &quot;gdi&quot;)
+#   gdi.herg &lt;- filter(herg.vars, location == &quot;gdi&quot;)
+#   gdi.gbbg &lt;- filter(gbbg.vars, location == &quot;gdi&quot;)
+#   gdi.coei &lt;- filter(coei.vars, location == &quot;gdi&quot;)
+#   </code></pre>
 <pre class="r"><code>bird.vars.2 &lt;- bird.vars %&gt;% filter(!(is.na(cover)))
 bird.vars.2 &lt;- bird.vars.2[is.na(bird.vars.2)] &lt;- &quot;0&quot;</code></pre>
 <pre class="r"><code>n_herg &lt;- herg_buff %&gt;%

@@ -129,3 +129,7 @@ island_veg_all %>%
        y = "Scientific names")
 ```
 
+```{r}
+hist(herg.vars.2$Join_Count)
+```
+

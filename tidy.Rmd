@@ -30,10 +30,12 @@ library(dataCompareR)
 library(lme4)
 #library(afex) #pulls p-values from GLM
 library(partR2) #derive r2 values from GLM
+library(rptR)
 library(TMB)
 library(glmmTMB)
 library(car)
 library(statmod)
+library(AICcmodavg)
 ```
 
 ```{r read-in-vegetation-file, echo = FALSE}
@@ -468,24 +470,24 @@ gull.vars <- bind_rows(herg.vars, gbbg.vars)
 #all species model.var dataframe
 bird.vars <- bind_rows(herg.vars, coei.vars, gbbg.vars)
 
-#by island
-shab.vars <- filter(bird.vars, location == "shabby")
-  shab.herg <- filter(herg.vars, location == "shabby")
-  shab.gbbg <- filter(gbbg.vars, location == "shabby")
-  shab.coei <- filter(coei.vars, location == "shabby")
-hrn.vars <- filter(bird.vars, location == "heron")
-  hrn.herg <- filter(herg.vars, location == "heron")
-  hrn.gbbg <- filter(gbbg.vars, location == "heron")
-  hrn.coei <- filter(coei.vars, location == "heron")
-sch.vars <- filter(bird.vars, location == "schoodic")
-  sch.herg <- filter(herg.vars, location == "schoodic")
-  sch.gbbg <- filter(gbbg.vars, location == "schoodic")
-  sch.coei <- filter(coei.vars, location == "schoodic")
-gdi.vars <- filter(bird.vars, location == "gdi")
-  gdi.herg <- filter(herg.vars, location == "gdi")
-  gdi.gbbg <- filter(gbbg.vars, location == "gdi")
-  gdi.coei <- filter(coei.vars, location == "gdi")
-  
+# #by island
+# shab.vars <- filter(bird.vars, location == "shabby")
+#   shab.herg <- filter(herg.vars, location == "shabby")
+#   shab.gbbg <- filter(gbbg.vars, location == "shabby")
+#   shab.coei <- filter(coei.vars, location == "shabby")
+# hrn.vars <- filter(bird.vars, location == "heron")
+#   hrn.herg <- filter(herg.vars, location == "heron")
+#   hrn.gbbg <- filter(gbbg.vars, location == "heron")
+#   hrn.coei <- filter(coei.vars, location == "heron")
+# sch.vars <- filter(bird.vars, location == "schoodic")
+#   sch.herg <- filter(herg.vars, location == "schoodic")
+#   sch.gbbg <- filter(gbbg.vars, location == "schoodic")
+#   sch.coei <- filter(coei.vars, location == "schoodic")
+# gdi.vars <- filter(bird.vars, location == "gdi")
+#   gdi.herg <- filter(herg.vars, location == "gdi")
+#   gdi.gbbg <- filter(gbbg.vars, location == "gdi")
+#   gdi.coei <- filter(coei.vars, location == "gdi")
+#   
 ```
 
 ```{r}
