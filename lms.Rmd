@@ -117,6 +117,7 @@ lm.hergH <-  lme4::glmer(Join_Count ~
   qqnorm(resid(lm.hergH))
   isSingular(lm.hergH)
 drop1(lm.hergH, test = "Chisq")
+
   
 # #THIS ONE
 #   ##*nope* too much correlation and variable inflation. use several smaller models??
@@ -137,57 +138,72 @@ drop1(lm.hergH, test = "Chisq")
 #   qqnorm(resid(lm.herg4))  
 
 ```
+```{r aictab}
+#herring gull
+modelhergs <- list(lm.hergC, lm.hergH)
+modelhergs.names <- c("lm.hergC", "lm.hergH")
+names(modelhergs) <- c("lm.hergC", "lm.hergH")
+modelhergs
+aictab(modelhergs)
+
+#great black-backed gull
+modelgbbg <- list(lm.gbbgC, lm.gbbgH)
+modelgbbg.names <- c("lm.gbbgC", "lm.gbbgH")
+names(modelhergs) <- c("lm.gbbgC", "lm.gbbgH")
+modelgbbg
+aictab(modelgbbg)
+```
 
 ```{r coei model}
-coei.vars.2 <- coei.vars %>% filter(!(is.na(cover)))
-lm.coei <- lme4::glmer(Join_Count ~ 
-                         herb + 
-                         vine + 
-                         gram + 
-                         shrub + 
-                         (1|location/gps), 
-                       family = poisson (link = log), 
-                       data = coei.vars.2
-                       )
- 
-  plot(lm.coei)
-  summary(lm.coei)
-  qqnorm(resid(lm.coei))
-
-
-lm.coeiC <- lme4::glmer(Join_Count ~ 
-                           Z +
-                           cover +
-                           sp_richness + 
-                           (1|location), 
-                         family = poisson(link  = log), 
-                         data = coei.vars.2)
-  plot(lm.coeiC)
-  summary(lm.coeiC)
-  qqnorm(resid(lm.coeiC))
-  
-lm.coeiH <- lme4::glmer(Join_Count ~ 
-                           Z +
-                           height +
-                           sp_richness + 
-                           (1|location), 
-                         family = poisson(link  = log), 
-                         data = coei.vars.2)
-  plot(lm.coeiH)
-  summary(lm.coeiH)
-  qqnorm(resid(lm.coeiH))
-  
-lm.coei <- lme4::glmer(Join_Count ~ 
-                           shrub *
-                           vine *
-                           gram * 
-                           herb +
-                           (1|location), 
-                         family = poisson(link  = log), 
-                         data = coei.vars.2)
-  plot(lm.coei)
-  summary(lm.coei)
-  qqnorm(resid(lm.coei))
+# coei.vars.2 <- coei.vars %>% filter(!(is.na(cover)))
+# lm.coei <- lme4::glmer(Join_Count ~ 
+#                          herb + 
+#                          vine + 
+#                          gram + 
+#                          shrub + 
+#                          (1|location/gps), 
+#                        family = poisson (link = log), 
+#                        data = coei.vars.2
+#                        )
+#  
+#   plot(lm.coei)
+#   summary(lm.coei)
+#   qqnorm(resid(lm.coei))
+# 
+# 
+# lm.coeiC <- lme4::glmer(Join_Count ~ 
+#                            Z +
+#                            cover +
+#                            sp_richness + 
+#                            (1|location), 
+#                          family = poisson(link  = log), 
+#                          data = coei.vars.2)
+#   plot(lm.coeiC)
+#   summary(lm.coeiC)
+#   qqnorm(resid(lm.coeiC))
+#   
+# lm.coeiH <- lme4::glmer(Join_Count ~ 
+#                            Z +
+#                            height +
+#                            sp_richness + 
+#                            (1|location), 
+#                          family = poisson(link  = log), 
+#                          data = coei.vars.2)
+#   plot(lm.coeiH)
+#   summary(lm.coeiH)
+#   qqnorm(resid(lm.coeiH))
+#   
+# lm.coei <- lme4::glmer(Join_Count ~ 
+#                            shrub *
+#                            vine *
+#                            gram * 
+#                            herb +
+#                            (1|location), 
+#                          family = poisson(link  = log), 
+#                          data = coei.vars.2)
+#   plot(lm.coei)
+#   summary(lm.coei)
+#   qqnorm(resid(lm.coei))
   
 ```
 
@@ -205,7 +221,7 @@ lm.gbbg <- lme4::glmer(Join_Count ~
                           vine +
                           gram +
                           shrub +
-                          (1|location/gps), 
+                          (1|location), 
                         family = poisson(link = log),
                         data = gbbg.vars.2)
   plot(lm.gbbg)
@@ -247,43 +263,43 @@ lm.gbbgC <- lme4::glmer(Join_Count~
 
 ##models for aggregate birds
 ```{r aggregate gull model}
-gull.vars.2 <- gull.vars %>% filter(!(is.na(cover)))
-lm.gull <- lme4::glmer(Join_Count ~ herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = gull.vars.2)
-
-summary(lm.gull)
-qqnorm(resid(lm.gull))
-
-lm.gull1 <- lme4::glmer(Join_Count ~ 
-                           Z +
-                           cover +
-                           height +
-                           sp_richness + 
-                           (1|location), 
-                         family = poisson(link  = log), 
-                         data = gull.vars.2)
-  plot(lm.gull1)
-  summary(lm.gull1)
-  qqnorm(resid(lm.gull1))
+# gull.vars.2 <- gull.vars %>% filter(!(is.na(cover)))
+# lm.gull <- lme4::glmer(Join_Count ~ herb + vine + gram + shrub + (1|location), family = poisson (link = log), data = gull.vars.2)
+# 
+# summary(lm.gull)
+# qqnorm(resid(lm.gull))
+# 
+# lm.gull1 <- lme4::glmer(Join_Count ~ 
+#                            Z +
+#                            cover +
+#                            height +
+#                            sp_richness + 
+#                            (1|location), 
+#                          family = poisson(link  = log), 
+#                          data = gull.vars.2)
+#   plot(lm.gull1)
+#   summary(lm.gull1)
+#   qqnorm(resid(lm.gull1))
 ```
 
 
 ```{r lm.bird}
-bird.vars.2 <- bird.vars %>% filter(!(is.na(cover)))
-lm.bird <- glmer(Join_Count ~ Z + height + cover + sp_richness + species + herb + vine + gram + shrub + (1|location), family = poisson(link = log), data = bird.vars.2)
-
-summary(lm.bird)
-
-lm.bird1 <- glmer(Join_Count ~ 
-                           Z +
-                           cover +
-                           height +
-                           sp_richness + 
-                           (1|location), 
-                         family = poisson(link  = log), 
-                         data = bird.vars.2)
-  plot(lm.bird1)
-  summary(lm.bird1)
-  qqnorm(resid(lm.bird1))
+# bird.vars.2 <- bird.vars %>% filter(!(is.na(cover)))
+# lm.bird <- glmer(Join_Count ~ Z + height + cover + sp_richness + species + herb + vine + gram + shrub + (1|location), family = poisson(link = log), data = bird.vars.2)
+# 
+# summary(lm.bird)
+# 
+# lm.bird1 <- glmer(Join_Count ~ 
+#                            Z +
+#                            cover +
+#                            height +
+#                            sp_richness + 
+#                            (1|location), 
+#                          family = poisson(link  = log), 
+#                          data = bird.vars.2)
+#   plot(lm.bird1)
+#   summary(lm.bird1)
+#   qqnorm(resid(lm.bird1))
 ```
 
 
@@ -551,8 +567,8 @@ r2_herg.con <- partR2(lm.herg,
 #error: "Error in `[<-.data.frame`(`*tmp*`, , rcol, value = c(0L, 0L, 2L, 0L, 0L,  : replacement has 80 rows, data has 81"
 #SOLUTION: Cover column has one NA entry. Filter out NA and run model again, r^2 should function.
 
-r2_hergC <- partR2(lm.hergC, partvars = c("Z", "cover", "sp_richness"), R2_type = "marginal", nboot = 10)
-r2_hergH <- partR2(lm.hergH, partvars = c("Z", "height", "sp_richness"), R2_type = "marginal", nboot = 10)
+r2_hergC <- partR2(lm.hergC, partvars = c("Z", "cover", "sp_richness"), R2_type = "marginal", nboot = 15)
+r2_hergH <- partR2(lm.hergH, partvars = c("Z", "height", "sp_richness"), R2_type = "marginal", nboot = 15)
 ```
 ```{r herg r2 summary}
 summary(r2_herg.mar)
@@ -562,52 +578,53 @@ summary(r2_hergH)
 ```
 
 ```{r lm.coei r2}
-R2_coei <- partR2(lm.coei, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
-                  R2_type = "marginal", nboot = 3)
-summary(R2_coei)
+# R2_coei <- partR2(lm.coei, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+#                   R2_type = "marginal", nboot = 3)
+# summary(R2_coei)
 ```
 ```{r coei.c r2}
 
-R2_coei.c <- partR2(lm.coei, 
-                  R2_type = "conditional", nboot = 5)
-summary(R2_coei.c)
+# R2_coei.c <- partR2(lm.coei, 
+#                   R2_type = "conditional", nboot = 5)
+# summary(R2_coei.c)
 ```
 
 
 ```{r lm.gbbg r2}
-R2_gbbg <- partR2(lm.gbbg, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
-                  R2_type = "marginal", nboot = 5)
+R2_gbbg <- partR2(lm.gbbg, partvars = c("herb", "vine", "gram", "shrub"), 
+                  R2_type = "marginal", nboot = 30)
 summary(R2_gbbg)
 ```
+
 ```{r gbbg.c r2}
 R2_gbbg.c <- partR2(lm.gbbg, 
-                  R2_type = "conditional", nboot = 5)
+                  R2_type = "conditional", nboot = 10)
 summary(R2_gbbg.c)
 ```
 
 ```{r r2 gull}
 
-R2_gull <- partR2(lm.gull, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
-                  R2_type = "marginal", nboot = 10)
-
-R2_gull.c <- partR2(lm.gull, 
-                  R2_type = "conditional", nboot = 10)
+# R2_gull <- partR2(lm.gull, partvars = c("Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"), 
+#                   R2_type = "marginal", nboot = 10)
+# 
+# R2_gull.c <- partR2(lm.gull, 
+#                   R2_type = "conditional", nboot = 10)
 ```
 
 ```{r r2 gull summary}
-summary(R2_gull)
-summary(R2_gull.c)
+# summary(R2_gull)
+# summary(R2_gull.c)
 ```
 
 ```{r lm.bird r2}
-R2_bird <- partR2(lm.bird, partvars = c( "species", "Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"),
-                  data = bird.vars.2, R2_type = "marginal", nboot = 5)
-R2_bird.c <- partR2(lm.bird, 
-                  R2_type = "conditional", nboot = 10)
+# R2_bird <- partR2(lm.bird, partvars = c( "species", "Z", "height", "cover", "sp_richness", "herb", "vine", "gram", "shrub"),
+#                   data = bird.vars.2, R2_type = "marginal", nboot = 5)
+# R2_bird.c <- partR2(lm.bird, 
+#                   R2_type = "conditional", nboot = 10)
 ```
 
 ```{r}
-summary(R2_bird)
+# summary(R2_bird)
 ```
 ```{r veg r2}
 R2_veg <- partR2(lm.sp_richness1, partvars = c("Z", "height", "Join_Count"), 
@@ -633,7 +650,7 @@ cor.test(x = herg.vars.2$cover, y = herg.vars.2$height, method = 'spearman')
 ```{r gbbg cor}
 vif(lm.gbbgC)
 vif(lm.gbbgH)
-vif(lm.gbbg2)
+vif(lm.gbbg)
 ```
 
 ```{r coei cor}
