@@ -495,7 +495,7 @@ bird.vars <- bind_rows(herg.vars, coei.vars, gbbg.vars)
 bird.vars.2 <- bird.vars %>% filter(!(is.na(cover)))
 bird.vars.2 <- bird.vars.2[is.na(bird.vars.2)] <- "0"
 ```
-#get veg species + bird species dataframe
+#get veg.var dataframe
 ```{r veg.vars}
 n_herg <- herg_buff %>%
   dplyr::select(!"species") %>%
@@ -508,10 +508,6 @@ n_gbbg <- gbbg_buff %>%
 n_coei <- coei_buff %>%
   dplyr::select(!"species") %>%
   rename("coei_count" = "Join_Count")
-#combine to make merging with island_veg_all simpler
-n_bird <- n_herg %>% 
-  left_join(n_gbbg, by = "gps") %>%
-  left_join(n_coei, by = "gps") 
 
 richness <- model.vars %>%
   dplyr::select(gps, sp_richness)
@@ -520,11 +516,20 @@ veg.vars.herg <- left_join(island_veg_all, n_herg, by = "gps")
 veg.vars.gbbg <- left_join(island_veg_all, n_gbbg, by = "gps")
 veg.vars.coei <- left_join(island_veg_all, n_coei, by = "gps")
 
-veg.vars <- island_veg_all %>%
+veg.vars.v <- island_veg_all %>%
   left_join(n_herg, by = "gps") %>%
   left_join(n_gbbg, by = "gps") %>%
   left_join(n_coei, by = "gps") %>%
   left_join(richness, by = "gps") %>%
   dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need X and Y or classed height/cover, etc
+
+veg.vars.v<- veg.vars.v %>%
+  mutate(bird_count = herg_count + gbbg_count + coei_count)
+
+#make version without species and genus (no duplicate GPS ids) to test how lm is treating them
+veg.vars <- veg.vars.v %>% 
+  dplyr::select(location, month, gps, Z, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count, bird_count) %>% 
+  distinct(gps, .keep_all = T)
+  
 ```
 

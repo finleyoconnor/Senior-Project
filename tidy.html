@@ -829,7 +829,7 @@ bird.vars &lt;- bind_rows(herg.vars, coei.vars, gbbg.vars)
 #   </code></pre>
 <pre class="r"><code>bird.vars.2 &lt;- bird.vars %&gt;% filter(!(is.na(cover)))
 bird.vars.2 &lt;- bird.vars.2[is.na(bird.vars.2)] &lt;- &quot;0&quot;</code></pre>
-<p>#get veg species + bird species dataframe</p>
+<p>#get veg.var dataframe</p>
 <pre class="r"><code>n_herg &lt;- herg_buff %&gt;%
   dplyr::select(!&quot;species&quot;) %&gt;%
   rename(&quot;herg_count&quot; = &quot;Join_Count&quot;)
@@ -841,10 +841,6 @@ n_gbbg &lt;- gbbg_buff %&gt;%
 n_coei &lt;- coei_buff %&gt;%
   dplyr::select(!&quot;species&quot;) %&gt;%
   rename(&quot;coei_count&quot; = &quot;Join_Count&quot;)
-#combine to make merging with island_veg_all simpler
-n_bird &lt;- n_herg %&gt;% 
-  left_join(n_gbbg, by = &quot;gps&quot;) %&gt;%
-  left_join(n_coei, by = &quot;gps&quot;) 
 
 richness &lt;- model.vars %&gt;%
   dplyr::select(gps, sp_richness)
@@ -853,12 +849,20 @@ veg.vars.herg &lt;- left_join(island_veg_all, n_herg, by = &quot;gps&quot;)
 veg.vars.gbbg &lt;- left_join(island_veg_all, n_gbbg, by = &quot;gps&quot;)
 veg.vars.coei &lt;- left_join(island_veg_all, n_coei, by = &quot;gps&quot;)
 
-veg.vars &lt;- island_veg_all %&gt;%
+veg.vars.v &lt;- island_veg_all %&gt;%
   left_join(n_herg, by = &quot;gps&quot;) %&gt;%
   left_join(n_gbbg, by = &quot;gps&quot;) %&gt;%
   left_join(n_coei, by = &quot;gps&quot;) %&gt;%
   left_join(richness, by = &quot;gps&quot;) %&gt;%
-  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need X and Y or classed height/cover, etc</code></pre>
+  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need X and Y or classed height/cover, etc
+
+veg.vars.v&lt;- veg.vars.v %&gt;%
+  mutate(bird_count = herg_count + gbbg_count + coei_count)
+
+#make version without species and genus (no duplicate GPS ids) to test how lm is treating them
+veg.vars &lt;- veg.vars.v %&gt;% 
+  dplyr::select(location, month, gps, Z, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count, bird_count) %&gt;% 
+  distinct(gps, .keep_all = T)</code></pre>
 
 
 
