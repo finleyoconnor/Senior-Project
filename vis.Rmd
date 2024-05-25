@@ -80,6 +80,19 @@ island_veg_all %>%
   labs(title = "Species Frequency (Heron Island)",
        x = "Number of occurences",
        y = "Scientific names")
+
+#veg frequency: OVERALL
+
+island_veg_all %>%
+  ggplot(mapping = aes(y = fct_infreq(spp))) +
+  geom_bar(fill = "darkorange3") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() +
+  labs(title = "Species Frequency (Overall)",
+       x = "Number of occurences",
+       y = "Scientific names")
+
+island_veg_all %>% count(spp, sort = T)
 ```
 
 
@@ -127,7 +140,19 @@ island_veg_all %>%
   labs(title = "Genus Frequency (Shabby Island)",
        x = "Number of occurences",
        y = "Scientific names")
+
+#genus frequency: OVERALL
+island_veg_all %>%
+  ggplot(mapping = aes(y = fct_infreq(genus))) +
+  geom_bar(fill = "darkorange3") +
+  theme(axis.text.y = element_text(vjust = 10)) +
+  theme_minimal() +
+  labs(title = "Genus Frequency (Overall)",
+       x = "Number of occurences",
+       y = "Scientific names")
+  
 ```
+
 
 ```{r}
 hist(herg.vars.2$Join_Count)
