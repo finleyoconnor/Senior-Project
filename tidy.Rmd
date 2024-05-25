@@ -508,12 +508,23 @@ n_gbbg <- gbbg_buff %>%
 n_coei <- coei_buff %>%
   dplyr::select(!"species") %>%
   rename("coei_count" = "Join_Count")
+#combine to make merging with island_veg_all simpler
+n_bird <- n_herg %>% 
+  left_join(n_gbbg, by = "gps") %>%
+  left_join(n_coei, by = "gps") 
 
-veg.vars.herg <- left_join(island_veg_all, herg_buff, by = "gps")
-veg.vars.gbbg <- left_join(island_veg_all, gbbg_buff, by = "gps")
-veg.vars.coei <- left_join(island_veg_all, coei_buff, by = "gps")
+richness <- model.vars %>%
+  dplyr::select(gps, sp_richness)
 
-# veg.vars <- left_join(island_veg_all, ) %>%
-#   left_
+veg.vars.herg <- left_join(island_veg_all, n_herg, by = "gps")
+veg.vars.gbbg <- left_join(island_veg_all, n_gbbg, by = "gps")
+veg.vars.coei <- left_join(island_veg_all, n_coei, by = "gps")
+
+veg.vars <- island_veg_all %>%
+  left_join(n_herg, by = "gps") %>%
+  left_join(n_gbbg, by = "gps") %>%
+  left_join(n_coei, by = "gps") %>%
+  left_join(richness, by = "gps") %>%
+  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need X and Y or classed height/cover, etc
 ```
 
