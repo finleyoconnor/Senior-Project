@@ -118,7 +118,19 @@ lm.hergH <-  lme4::glmer(Join_Count ~
   isSingular(lm.hergH)
 drop1(lm.hergH, test = "Chisq")
 
-  
+lm.hergHC <-  lme4::glmer(Join_Count ~ 
+                           Z +
+                           height +
+                           cover +
+                           sp_richness + 
+                           (1|location/gps), 
+                         family = poisson(link  = log), 
+                         data = herg.vars.2)
+  plot(lm.hergHC)
+  summary(lm.hergHC)
+  qqnorm(resid(lm.hergHC))
+  isSingular(lm.hergHC)
+drop1(lm.hergHC, test = "Chisq")
 # #THIS ONE
 #   ##*nope* too much correlation and variable inflation. use several smaller models??
 #   lm.herg4 <-  lme4::glmer(Join_Count ~ 
@@ -140,16 +152,16 @@ drop1(lm.hergH, test = "Chisq")
 ```
 ```{r aictab}
 #herring gull
-modelhergs <- list(lm.hergC, lm.hergH)
-modelhergs.names <- c("lm.hergC", "lm.hergH")
-names(modelhergs) <- c("lm.hergC", "lm.hergH")
+modelhergs <- list(lm.hergC, lm.hergH, lm.hergHC)
+modelhergs.names <- c("lm.hergC", "lm.hergH", "lm.hergHC")
+names(modelhergs) <- c("lm.hergC", "lm.hergH", "lm.hergHC")
 modelhergs
 aictab(modelhergs)
 
 #great black-backed gull
-modelgbbg <- list(lm.gbbgC, lm.gbbgH)
-modelgbbg.names <- c("lm.gbbgC", "lm.gbbgH")
-names(modelhergs) <- c("lm.gbbgC", "lm.gbbgH")
+modelgbbg <- list(lm.gbbgC, lm.gbbgH, lm.gbbgHC)
+modelgbbg.names <- c("lm.gbbgC", "lm.gbbgH", "lm.gbbgHC")
+names(modelgbbg) <- c("lm.gbbgC", "lm.gbbgH", "lm.gbbgHC")
 modelgbbg
 aictab(modelgbbg)
 ```
@@ -256,7 +268,19 @@ lm.gbbgC <- lme4::glmer(Join_Count~
   isSingular(lm.gbbgC)
   drop1(lm.gbbgC, test = "Chisq")
 
-
+lm.gbbgHC <- lme4::glmer(Join_Count~ 
+                           Z +
+                           height +
+                           cover +
+                           sp_richness + 
+                           (1|location/gps), 
+                         family = poisson(link  = log), 
+                         data = gbbg.vars.2)
+  plot(lm.gbbgHC)
+  summary(lm.gbbgHC)
+  qqnorm(resid(lm.gbbgHC))
+  isSingular(lm.gbbgHC)
+  drop1(lm.gbbgHC, test = "Chisq")
 ```
 
 
@@ -322,8 +346,18 @@ lm.gbbgC <- lme4::glmer(Join_Count~
 lm.sp_richness <- glmer(sp_richness ~ Join_Count + height + (1|location), family = poisson(link = log),data = coei.vars)
 summary(lm.sp_richness)
 
-lm.sp_richness1 <- glmer(sp_richness ~ Join_Count + Z + height + (1|location), family = poisson(link = log),data = bird.vars)
-summary(lm.sp_richness1)
+lm.sp_richnessG <- glmer(sp_richness ~ 
+                           #Join_Count + 
+                           Z + 
+                           height + 
+                           species + 
+                           (1|location), 
+                         family = poisson(link = log),
+                         data = bird.vars)
+isSingular(lm.sp_richnessG)
+vif(lm.sp_richnessG)
+summary(lm.sp_richnessG)
+
 
 lm.sp_rich.herg <- glmer(sp_richness ~ Join_Count + Z + height + (1|location/gps), family = poisson(link = log),data = herg.vars)
 summary(lm.sp_rich.herg)
@@ -644,8 +678,23 @@ summary(R2_veg.c)
 vif(lm.herg)
 vif(lm.hergC)
 vif(lm.hergH)
+vif(lm.hergHC)
 
-cor.test(x = herg.vars.2$cover, y = herg.vars.2$height, method = 'spearman')
+cor.test(x = herg.vars.2$cover, 
+         y = herg.vars.2$height, 
+         method = 'spearman')
+cor.test(x = herg.vars.2$cover, 
+         y = herg.vars.2$sp_richness, 
+         method = 'spearman')
+cor.test(x = herg.vars.2$cover, 
+         y = herg.vars.2$Z, 
+         method = 'spearman')
+cor.test(x = herg.vars.2$height, 
+         y = herg.vars.2$sp_richness, 
+         method = 'spearman')
+cor.test(x = herg.vars.2$Z,
+         y = herg.vars.2$sp_richness, 
+         method = 'spearman')
 ```
 ```{r gbbg cor}
 vif(lm.gbbgC)
