@@ -36,6 +36,7 @@ library(glmmTMB)
 library(car)
 library(statmod)
 library(AICcmodavg)
+library(MASS) #need to call dplyr::select specifically while MASS is loaded
 ```
 
 ```{r read-in-vegetation-file, echo = FALSE}
@@ -344,7 +345,7 @@ island_veg_all <- island_veg_all %>%
 
 #spp_list
 ```{r}
-spp_list <- island_veg_all %>% select(spp, type, arm)
+spp_list <- island_veg_all %>% dplyr::select(spp, type, arm)
 spp_list <- distinct(spp_list)
 
 ```
@@ -369,17 +370,17 @@ rich.na <- island_veg_all %>%
   mutate(sp_richness = 0) #sp richness count for NAs
 
 filtered <- island_veg_all %>%
-  select(location,gps,date, month, cover, cover_class, height, height_class, POINT_X, POINT_Y, Z, arm)
+  dplyr::select(location,gps,date, month, cover, cover_class, height, height_class, POINT_X, POINT_Y, Z, arm)
 
 model.vars <- rbind(rich.notna,rich.na) %>%
-  select(1:2) %>%
+  dplyr::select(1:2) %>%
   left_join(filtered, by = "gps") %>%
   distinct(gps, .keep_all = TRUE)
 ```
 
 ```{r make structure + model.vars}
 structure <- island_veg_all %>%
-  select(gps, type) %>%
+  dplyr::select(gps, type) %>%
   mutate(presence = "1") %>%
   pivot_wider(id_cols = gps, names_from = type, values_from = presence) %>%
   mutate(herb = case_when(herb == "NULL" ~ "0",
@@ -390,7 +391,7 @@ structure <- island_veg_all %>%
                           TRUE ~ "1")) %>%
   mutate(gram = case_when(gram == "NULL" ~ "0",
                           TRUE ~ "1")) %>%
-  select(gps, herb, vine, gram, shrub)
+  dplyr::select(gps, herb, vine, gram, shrub)
 
 structure <- structure %>% 
   mutate(herb = as.factor(herb)) %>%
@@ -399,7 +400,7 @@ structure <- structure %>%
   mutate(gram = as.factor(gram))
 
 # structure <- test %>%
-#   select(gps, herb, vine, gram, shrub)
+#   dplyr::select(gps, herb, vine, gram, shrub)
 
  model.vars <- left_join(model.vars, structure, by = "gps") 
  
@@ -447,13 +448,13 @@ gbbg_buff <- bind_rows(gdi_gbbg_count, gbbg_count)
 
 #trim down to sampled points
 herg_buff <- herg_buff %>%
-  select(Join_Count, gps, species) %>%
+  dplyr::select(Join_Count, gps, species) %>%
   subset(gps %in% model.vars$gps)
 coei_buff <- coei_buff %>%
-  select(Join_Count, gps, species) %>%
+  dplyr::select(Join_Count, gps, species) %>%
   subset(gps %in% model.vars$gps)
 gbbg_buff <- gbbg_buff %>%
-  select(Join_Count, gps, species) %>%
+  dplyr::select(Join_Count, gps, species) %>%
   subset(gps %in% model.vars$gps)
 
 #join bird counts with model.var
@@ -494,21 +495,21 @@ bird.vars <- bind_rows(herg.vars, coei.vars, gbbg.vars)
 bird.vars.2 <- bird.vars %>% filter(!(is.na(cover)))
 bird.vars.2 <- bird.vars.2[is.na(bird.vars.2)] <- "0"
 ```
-
+#get veg species + bird species dataframe
 ```{r veg.vars}
 n_herg <- herg_buff %>%
-  select(!"species") %>%
+  dplyr::select(!"species") %>%
   rename("herg_count" = "Join_Count")
 
 n_gbbg <- gbbg_buff %>%
-  select(!"species") %>%
+  dplyr::select(!"species") %>%
   rename("gbbg_count" = "Join_Count")
 
 n_coei <- coei_buff %>%
-  select(!"species") %>%
+  dplyr::select(!"species") %>%
   rename("coei_count" = "Join_Count")
 
-veg.vars.herg <- left_join(island_veg_all, herg_buff, by = "gps") 
+veg.vars.herg <- left_join(island_veg_all, herg_buff, by = "gps")
 veg.vars.gbbg <- left_join(island_veg_all, gbbg_buff, by = "gps")
 veg.vars.coei <- left_join(island_veg_all, coei_buff, by = "gps")
 
