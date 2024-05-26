@@ -424,7 +424,7 @@ library(glmmTMB)</code></pre>
 island_veg_all &lt;- island_veg %&gt;% 
   left_join(veg_attributes, island_veg, by = &quot;gps&quot;) %&gt;%
   slice(-13,-14,-15,-17,-18,-19,-21,-22,-23,-25,-26,-27,-29,-30,-31,-33,-34,-35,-37,-38,-39,-41,-42,-43) %&gt;%
-  dplyr::select(location, date, gps, cover, height, spp, POINT_X, POINT_Y, Z)</code></pre>
+  dplyr::select(location, date, gps, cover, height, spp, spp_code, POINT_X, POINT_Y, Z)</code></pre>
 <ul>
 <li></li>
 </ul>
@@ -856,22 +856,22 @@ veg.vars.v &lt;- island_veg_all %&gt;%
   left_join(n_gbbg, by = &quot;gps&quot;) %&gt;%
   left_join(n_coei, by = &quot;gps&quot;) %&gt;%
   left_join(richness, by = &quot;gps&quot;) %&gt;%
-  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need POINT_X and POINT_Y or classed height/cover, etc
+  dplyr::select(location, month, gps, Z, spp, spp_code, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need POINT_X and POINT_Y or classed height/cover, etc
 
-veg.vars.v&lt;- veg.vars.v %&gt;%
-  mutate(bird_count = herg_count + gbbg_count + coei_count)
+veg.vars.v &lt;- veg.vars.v %&gt;%
+  mutate(bird_count = herg_count + gbbg_count + coei_count) %&gt;% 
+  mutate(spp = str_replace_all(spp,&#39; &#39;, &#39;_&#39;),
+         spp_code = str_replace_all(spp_code, &#39; &#39;, &#39;_&#39;))
 
 #make version without species and genus (no duplicate GPS ids) to test how lm is treating them
-  ##duplicate entries was screwing up the model *sigh* -&gt; need to pivot veg.vars.v
+  ##duplicate entries was screwing up the model *sigh* -&gt; need to pivot veg.vars.v for species &amp; genus models
 veg.vars &lt;- veg.vars.v %&gt;% 
   dplyr::select(location, month, gps, Z, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count, bird_count) %&gt;% 
   distinct(gps, .keep_all = T)
 
-
-  
 #species testable df
 spp.vars &lt;- veg.vars.v %&gt;% 
-  dplyr::select(month, location, gps, Z, sp_richness, herg_count, gbbg_count, coei_count, bird_count, spp) %&gt;%
+  dplyr::select(month, location, gps, Z, sp_richness, herg_count, gbbg_count, coei_count, bird_count, spp,) %&gt;%
   pivot_wider(names_from = spp, names_sort = T, values_from = spp, values_fn = list, values_fill = as.list(&quot;0&quot;))</code></pre>
 
 

@@ -62,7 +62,7 @@ veg_attributes <- veg_attributes %>%
 island_veg_all <- island_veg %>% 
   left_join(veg_attributes, island_veg, by = "gps") %>%
   slice(-13,-14,-15,-17,-18,-19,-21,-22,-23,-25,-26,-27,-29,-30,-31,-33,-34,-35,-37,-38,-39,-41,-42,-43) %>%
-  dplyr::select(location, date, gps, cover, height, spp, POINT_X, POINT_Y, Z)
+  dplyr::select(location, date, gps, cover, height, spp, spp_code, POINT_X, POINT_Y, Z)
   
 ```
 -
@@ -81,12 +81,12 @@ mutate(height_class = case_when(TRUE ~ as.ordered(height))) %>% #adding a height
 mutate(cover_class = case_when(TRUE ~ as.ordered(cover))) #adding a cover class factor variable
 ```
 
-```{r create-veg-types}
+```{r create veg type columns}
 island_veg_all$type <- "NA"
 island_veg_all$arm<- "NA"
 ```
 
-```{r}
+```{r spp_list dataframe}
 spp_list <- unique(island_veg_all$spp)
 spp_list <- as.data.frame(spp_list)
   colnames(spp_list) <- "spp"
@@ -524,22 +524,22 @@ veg.vars.v <- island_veg_all %>%
   left_join(n_gbbg, by = "gps") %>%
   left_join(n_coei, by = "gps") %>%
   left_join(richness, by = "gps") %>%
-  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need POINT_X and POINT_Y or classed height/cover, etc
+  dplyr::select(location, month, gps, Z, spp, spp_code, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need POINT_X and POINT_Y or classed height/cover, etc
 
-veg.vars.v<- veg.vars.v %>%
-  mutate(bird_count = herg_count + gbbg_count + coei_count)
+veg.vars.v <- veg.vars.v %>%
+  mutate(bird_count = herg_count + gbbg_count + coei_count) %>% 
+  mutate(spp = str_replace_all(spp,' ', '_'),
+         spp_code = str_replace_all(spp_code, ' ', '_'))
 
 #make version without species and genus (no duplicate GPS ids) to test how lm is treating them
-  ##duplicate entries was screwing up the model *sigh* -> need to pivot veg.vars.v
+  ##duplicate entries was screwing up the model *sigh* -> need to pivot veg.vars.v for species & genus models
 veg.vars <- veg.vars.v %>% 
   dplyr::select(location, month, gps, Z, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count, bird_count) %>% 
   distinct(gps, .keep_all = T)
 
-
-  
 #species testable df
 spp.vars <- veg.vars.v %>% 
-  dplyr::select(month, location, gps, Z, sp_richness, herg_count, gbbg_count, coei_count, bird_count, spp) %>%
+  dplyr::select(month, location, gps, Z, sp_richness, herg_count, gbbg_count, coei_count, bird_count, spp,) %>%
   pivot_wider(names_from = spp, names_sort = T, values_from = spp, values_fn = list, values_fill = as.list("0"))
 
 
