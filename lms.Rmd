@@ -72,6 +72,7 @@ herg.vars.2 <- herg.vars %>% filter(!(is.na(cover)))
 #   qqnorm(resid(lm.hergI))
 #   
 ```
+
 ```{r herg lm}
 
 lm.herg <- lme4::glmer(Join_Count ~
@@ -149,21 +150,6 @@ drop1(lm.hergHC, test = "Chisq")
 #   summary(lm.herg4)
 #   qqnorm(resid(lm.herg4))  
 
-```
-```{r aictab}
-#herring gull
-modelhergs <- list(lm.hergC, lm.hergH, lm.hergHC)
-modelhergs.names <- c("lm.hergC", "lm.hergH", "lm.hergHC")
-names(modelhergs) <- c("lm.hergC", "lm.hergH", "lm.hergHC")
-modelhergs
-aictab(modelhergs)
-
-#great black-backed gull
-modelgbbg <- list(lm.gbbgC, lm.gbbgH, lm.gbbgHC)
-modelgbbg.names <- c("lm.gbbgC", "lm.gbbgH", "lm.gbbgHC")
-names(modelgbbg) <- c("lm.gbbgC", "lm.gbbgH", "lm.gbbgHC")
-modelgbbg
-aictab(modelgbbg)
 ```
 
 ```{r coei model}
@@ -282,7 +268,21 @@ lm.gbbgHC <- lme4::glmer(Join_Count~
   isSingular(lm.gbbgHC)
   drop1(lm.gbbgHC, test = "Chisq")
 ```
+```{r aictab}
+#herring gull
+modelhergs <- list(lm.hergC, lm.hergH, lm.hergHC)
+modelhergs.names <- c("lm.hergC", "lm.hergH", "lm.hergHC")
+names(modelhergs) <- c("lm.hergC", "lm.hergH", "lm.hergHC")
+modelhergs
+aictab(modelhergs)
 
+#great black-backed gull
+modelgbbg <- list(lm.gbbgC, lm.gbbgH, lm.gbbgHC)
+modelgbbg.names <- c("lm.gbbgC", "lm.gbbgH", "lm.gbbgHC")
+names(modelgbbg) <- c("lm.gbbgC", "lm.gbbgH", "lm.gbbgHC")
+modelgbbg
+aictab(modelgbbg)
+```
 
 
 ##models for aggregate birds
