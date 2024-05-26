@@ -343,7 +343,7 @@ lm.gbbgHC <- lme4::glmer(Join_Count~
 
 ##veg models
 ```{r lm veg}
-lm.sp_richness <- glmer(sp_richness ~ Join_Count + height + (1|location), family = poisson(link = log),data = coei.vars)
+lm.sp_richness <- glmer(sp_richness ~  + height + (1|location), family = poisson(link = log),data = veg.vars)
 summary(lm.sp_richness)
 
 lm.sp_richnessG <- glmer(sp_richness ~ 
@@ -363,9 +363,75 @@ lm.sp_rich.herg <- glmer(sp_richness ~ Join_Count + Z + height + (1|location/gps
 summary(lm.sp_rich.herg)
 ```
 
-```{r}
-vif(lm.sp_rich.herg)
+```{r richness ~ nest counts}
+lm.richbirds <- glmer(sp_richness ~
+                      herg_count +
+                      gbbg_count +
+                      coei_count +
+                      (1|location/gps),
+                    family = poisson(link = log),
+                    data = veg.vars)
+plot(lm.richbirds)
+isSingular(lm.richbirds)
+qqnorm(resid(lm.richbirds))
+vif(lm.richbirds)
+summary(lm.richbirds)
+
+lm.richbirds1 <- glmer(sp_richness ~
+                      herg_count +
+                      gbbg_count +
+                      coei_count +
+                      (1|month),
+                    family = poisson(link = log),
+                    data = veg.vars)
+plot(lm.richbirds1)
+isSingular(lm.richbirds1)
+qqnorm(resid(lm.richbirds1))
+vif(lm.richbirds1)
+summary(lm.richbirds1)
 ```
+```{r cover ~ nest cts}
+lm.cover <- glmer(cover ~
+                      herg_count +
+                      gbbg_count +
+                      coei_count +
+                      (1|location), #/gps caused singularity
+                    family = poisson(link = log),
+                    data = veg.vars)
+plot(lm.cover)
+isSingular(lm.cover)
+qqnorm(resid(lm.cover))
+vif(lm.cover)
+summary(lm.cover)
+
+lm.cover1 <- glmer(cover ~
+                      herg_count +
+                      gbbg_count +
+                      coei_count +
+                      (1|month),
+                    family = poisson(link = log),
+                    data = veg.vars)
+plot(lm.cover1)
+isSingular(lm.cover1)
+qqnorm(resid(lm.cover1))
+vif(lm.cover1)
+summary(lm.cover1)
+```
+```{r solidago ~ nest ct}
+lm.sol <- glmer(89  ~
+                      herg_count +
+                      gbbg_count +
+                      coei_count +
+                      (1|month),
+                    family = poisson(link = log),
+                    data = veg.vars)
+plot(lm.cover1)
+isSingular(lm.cover1)
+qqnorm(resid(lm.cover1))
+vif(lm.cover1)
+summary(lm.cover1)
+```
+
 
 ##glm for each island
 ```{r shabby}
@@ -589,8 +655,6 @@ vif(lm.sp_rich.herg)
 ```
 
 
-
-
 #R2
 
 ```{r lm.herg r2}
@@ -716,7 +780,7 @@ cor.test(x = herg.vars.2$herb, y = herg.vars.2$shrub, method = 'spearman')
 ```{r veg}
 vif(lm.sp_richness)
 vif(lm.sp_richness1)
-
+vif(lm.sp_rich.herg)
 cor.test(x = bird.vars.2$sp_richness, y = bird.vars.2$Z, method = 'spearman')
 ```
 
