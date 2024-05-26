@@ -418,11 +418,13 @@ library(glmmTMB)</code></pre>
 <pre class="r"><code>gdi_attributes &lt;- gdi_attributes %&gt;%
   mutate(name = paste0(&#39;gdi&#39;,gdi_attributes$OBJECTID))</code></pre>
 <pre class="r"><code>veg_attributes &lt;- bind_rows(veg_attributes, gdi_attributes)</code></pre>
-<pre class="r"><code>island_veg &lt;- island_veg %&gt;% 
-  mutate(name = gps)
+<pre class="r"><code>veg_attributes &lt;- veg_attributes %&gt;% 
+  mutate(gps = name) %&gt;% dplyr::select(OBJECTID, CID, gps, POINT_X, POINT_Y, Z)
 
 island_veg_all &lt;- island_veg %&gt;% 
-                  left_join(veg_attributes, island_veg, by = &quot;name&quot;)</code></pre>
+  left_join(veg_attributes, island_veg, by = &quot;gps&quot;) %&gt;%
+  slice(-13,-14,-15,-17,-18,-19,-21,-22,-23,-25,-26,-27,-29,-30,-31,-33,-34,-35,-37,-38,-39,-41,-42,-43) %&gt;%
+  dplyr::select(location, date, gps, cover, height, spp, POINT_X, POINT_Y, Z)</code></pre>
 <ul>
 <li></li>
 </ul>
@@ -433,8 +435,8 @@ island_veg_all &lt;- island_veg %&gt;%
     TRUE ~ location
   ))</code></pre>
 <pre class="r"><code> island_veg_all &lt;- island_veg_all %&gt;%
-mutate(height_class = case_when(TRUE ~ as.ordered(height))) %&gt;% #making height class a factor variable
-mutate(cover_class = case_when(TRUE ~ as.ordered(cover))) #making cover class a factor variable</code></pre>
+mutate(height_class = case_when(TRUE ~ as.ordered(height))) %&gt;% #adding a height class factor variable
+mutate(cover_class = case_when(TRUE ~ as.ordered(cover))) #adding a cover class factor variable</code></pre>
 <pre class="r"><code>island_veg_all$type &lt;- &quot;NA&quot;
 island_veg_all$arm&lt;- &quot;NA&quot;</code></pre>
 <pre class="r"><code>spp_list &lt;- unique(island_veg_all$spp)
@@ -757,32 +759,32 @@ model.vars &lt;- rbind(rich.notna,rich.na) %&gt;%
 
  model.vars &lt;- left_join(model.vars, structure, by = &quot;gps&quot;) </code></pre>
 <p>#bird data</p>
-<pre class="r"><code># herg_count &lt;- read_excel(&quot;gitdata/herg_buff_count_TableToExcel.xlsx&quot;)
-# coei_count &lt;- read_excel(&quot;gitdata/coei_buff_count_TableToExcel.xlsx&quot;)
-# gbbg_count &lt;- read_excel(&quot;gitdata/gbbg_buff_count_TableToExcel.xlsx&quot;)
+<pre class="r"><code># herg_ct &lt;- read_excel(&quot;gitdata/herg_buff_count_TableToExcel.xlsx&quot;)
+# coei_ct &lt;- read_excel(&quot;gitdata/coei_buff_count_TableToExcel.xlsx&quot;)
+# gbbg_ct &lt;- read_excel(&quot;gitdata/gbbg_buff_count_TableToExcel.xlsx&quot;)
 
-herg_count &lt;- read_excel(&quot;gitdata/plot_buff_5m_herg_TableToExcel.xlsx&quot;)
-coei_count &lt;- read_excel(&quot;gitdata/plot_buff_5m_coei_TableToExcel.xlsx&quot;)
-gbbg_count &lt;- read_excel(&quot;gitdata/plot_buff_5m_gbbg_TableToExcel.xlsx&quot;)</code></pre>
-<pre class="r"><code># gdi_herg_count &lt;- read_excel(&quot;gitdata/gdi_herg_buff_count.xls&quot;)
-# gdi_coei_count &lt;- read_excel(&quot;gitdata/gdi_coei_buff_count.xls&quot;)
-# gdi_gbbg_count &lt;- read_excel(&quot;gitdata/gdi_gbbg_buff_count_TableToExcel.xlsx&quot;)
+herg_ct &lt;- read_excel(&quot;gitdata/plot_buff_5m_herg_TableToExcel.xlsx&quot;)
+coei_ct &lt;- read_excel(&quot;gitdata/plot_buff_5m_coei_TableToExcel.xlsx&quot;)
+gbbg_ct &lt;- read_excel(&quot;gitdata/plot_buff_5m_gbbg_TableToExcel.xlsx&quot;)</code></pre>
+<pre class="r"><code># gdi_herg_ct &lt;- read_excel(&quot;gitdata/gdi_herg_buff_count.xls&quot;)
+# gdi_coei_ct &lt;- read_excel(&quot;gitdata/gdi_coei_buff_count.xls&quot;)
+# gdi_gbbg_ct &lt;- read_excel(&quot;gitdata/gdi_gbbg_buff_count_TableToExcel.xlsx&quot;)
 
-gdi_herg_count &lt;- read_excel(&quot;gitdata/gdi_buff_5m_herg_TableToExcel.xlsx&quot;)
-gdi_coei_count &lt;- read_excel(&quot;gitdata/gdi_buff_5m_coei_TableToExcel.xlsx&quot;)
-gdi_gbbg_count &lt;- read_excel(&quot;gitdata/gdi_buff_5m_gbbg_TableToExcel.xlsx&quot;)</code></pre>
-<pre class="r"><code>gdi_herg_count &lt;- gdi_herg_count %&gt;%
-  mutate(gps = paste0(&#39;gdi&#39;,gdi_herg_count$OBJECTID))
+gdi_herg_ct &lt;- read_excel(&quot;gitdata/gdi_buff_5m_herg_TableToExcel.xlsx&quot;)
+gdi_coei_ct &lt;- read_excel(&quot;gitdata/gdi_buff_5m_coei_TableToExcel.xlsx&quot;)
+gdi_gbbg_ct &lt;- read_excel(&quot;gitdata/gdi_buff_5m_gbbg_TableToExcel.xlsx&quot;)</code></pre>
+<pre class="r"><code>gdi_herg_ct &lt;- gdi_herg_ct %&gt;%
+  mutate(gps = paste0(&#39;gdi&#39;,gdi_herg_ct$OBJECTID))
 
-gdi_coei_count &lt;- gdi_coei_count %&gt;%
-  mutate(gps = paste0(&#39;gdi&#39;,gdi_coei_count$OBJECTID))
+gdi_coei_ct &lt;- gdi_coei_ct %&gt;%
+  mutate(gps = paste0(&#39;gdi&#39;,gdi_coei_ct$OBJECTID))
 
-gdi_gbbg_count &lt;- gdi_gbbg_count %&gt;%
-  mutate(gps = paste0(&#39;gdi&#39;,gdi_gbbg_count$OBJECTID))</code></pre>
+gdi_gbbg_ct &lt;- gdi_gbbg_ct %&gt;%
+  mutate(gps = paste0(&#39;gdi&#39;,gdi_gbbg_ct$OBJECTID))</code></pre>
 <pre class="r"><code>#combine GDI and all other islands
-herg_buff &lt;- bind_rows(gdi_herg_count, herg_count)
-coei_buff &lt;- bind_rows(gdi_coei_count, coei_count)
-gbbg_buff &lt;- bind_rows(gdi_gbbg_count, gbbg_count)
+herg_buff &lt;- bind_rows(gdi_herg_ct, herg_ct)
+coei_buff &lt;- bind_rows(gdi_coei_ct, coei_ct)
+gbbg_buff &lt;- bind_rows(gdi_gbbg_ct, gbbg_ct)
 
 #trim down to sampled points
 herg_buff &lt;- herg_buff %&gt;%
@@ -829,7 +831,7 @@ bird.vars &lt;- bind_rows(herg.vars, coei.vars, gbbg.vars)
 #   </code></pre>
 <pre class="r"><code>bird.vars.2 &lt;- bird.vars %&gt;% filter(!(is.na(cover)))
 bird.vars.2 &lt;- bird.vars.2[is.na(bird.vars.2)] &lt;- &quot;0&quot;</code></pre>
-<p>#get veg.var dataframe</p>
+<p>#get veg.var dataframes for models</p>
 <pre class="r"><code>n_herg &lt;- herg_buff %&gt;%
   dplyr::select(!&quot;species&quot;) %&gt;%
   rename(&quot;herg_count&quot; = &quot;Join_Count&quot;)
@@ -854,15 +856,23 @@ veg.vars.v &lt;- island_veg_all %&gt;%
   left_join(n_gbbg, by = &quot;gps&quot;) %&gt;%
   left_join(n_coei, by = &quot;gps&quot;) %&gt;%
   left_join(richness, by = &quot;gps&quot;) %&gt;%
-  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need X and Y or classed height/cover, etc
+  dplyr::select(location, month, gps, Z, spp, genus, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count) #can decide later if you need POINT_X and POINT_Y or classed height/cover, etc
 
 veg.vars.v&lt;- veg.vars.v %&gt;%
   mutate(bird_count = herg_count + gbbg_count + coei_count)
 
 #make version without species and genus (no duplicate GPS ids) to test how lm is treating them
+  ##duplicate entries was screwing up the model *sigh* -&gt; need to pivot veg.vars.v
 veg.vars &lt;- veg.vars.v %&gt;% 
   dplyr::select(location, month, gps, Z, type, sp_richness, cover, height, herg_count, gbbg_count, coei_count, bird_count) %&gt;% 
-  distinct(gps, .keep_all = T)</code></pre>
+  distinct(gps, .keep_all = T)
+
+
+  
+#species testable df
+spp.vars &lt;- veg.vars.v %&gt;% 
+  dplyr::select(month, location, gps, Z, sp_richness, herg_count, gbbg_count, coei_count, bird_count, spp) %&gt;%
+  pivot_wider(names_from = spp, names_sort = T, values_from = spp, values_fn = list, values_fill = as.list(&quot;0&quot;))</code></pre>
 
 
 
